@@ -1,0 +1,58 @@
+<%- include("navbar") %> 
+
+<link rel="stylesheet" href="/stylesheets/style.css">
+         
+
+<section class="vh-100" style="background-color: #dee3ee;">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card shadow-2-strong" style="border-radius: 1rem;">
+          <div class="card-body p-5 text-center">
+            <form id="form" action="/addme" method="post">
+              <h1 id="form-title"> Sign Up</h1>
+          
+              <label for="name" class="name-info">First Name</label>
+              <input type="name" name="firstName" id="name" placeholder="Enter email">
+              
+              <label for="name" class="name-info">Last Name</label>
+              <input type="name" name="lastName" id="lastName" placeholder="Enter email">
+  
+              <label for="email adress" class="name-info">Email Address</label>
+              <input type="email" name="email" id="email" placeholder="Enter email">
+          
+              <label for="password" class="name-info">Password</label>
+              <input type="password" name="password1" placeholder="Enter password"  id="password" required>
+          
+              <label for="password" class="name-info">Confirm Password</label>
+              <input type="password" name="password2" placeholder="Enter password"  id="password" required>
+          
+              <div class="check-container">
+                  <input type="checkbox" name="" id="checkbox">
+                  <span>Remember me </span>
+          
+              </div>
+           
+               <button class="submit" type="submit">Log In </button>
+               <p id="forgotPsw" class="text-center">OR</p>
+               <button class="submit " type="submit"><a class="text-white text-decoration-none" href="/git">Log in with Github</a></button>
+               
+                     
+              <a href="#" class="enter-password" id="forgotPsw" onclick="resetPassword()"> <span>Forgot</span> <span id="forgotPsw">password?</span></a href="#">
+            
+              </form>    
+              
+          </div>
+  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+       
+
+    <%- include("footer") %> 
+
+

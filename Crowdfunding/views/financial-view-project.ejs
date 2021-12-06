@@ -97,7 +97,7 @@
     <br>
 
   <div class="row g-5">
-    <div class="col-md-8">
+    <div class="col-md-7">
       <h3 class="pb-4 mb-4 fst-italic border-bottom">
         <%= project.title %>
       </h3>
@@ -108,7 +108,7 @@
         
 
       <% for(var j=0; j < project.initalImages.length; j++) { %>
-        <div class="col-sm-6 col-lg-4 mb-4">
+        <div class="col-sm-6 col-lg-6 mb-4">
             <div class="card">
                 <img src="/images/initial_stage_pics/<%= project.initalImages[j] %>" alt="">
             </div>
@@ -123,7 +123,7 @@
       
 
       <% for(var j=0; j < project.finalImages.length; j++) { %>
-        <div class="col-sm-6 col-lg-4 mb-4">
+        <div class="col-sm-6 col-lg-6 mb-4">
             <div class="card">
                 <img src="/images/final_stage_pics/<%= project.finalImages[j] %>" alt="">
             </div>
@@ -139,7 +139,7 @@
 
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-5">
       <div class="position-sticky" style="top: 2rem;">
 
   
@@ -149,38 +149,43 @@
           <h4 class="fst-italic">Financial Administrator buttons</h4>
 
           <p class="mb-0">The <%= project.percentage %> % of money recieved should be shown here with a progress bar.</p>
+          <p class="mb-0">The <%= project.percentage %> % of money recieved should be shown here with a progress bar.</p>
+          <p class="mb-0">The <%= project.percentage %> % of money recieved should be shown here with a progress bar.</p>
           
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
+          <!-- <% for(var i=0; i< donations.length; i++) { %>
+            <form method="post" id="form" style="background-color:cornsilk; padding: 10px; width: 100%;">
+              <h4>Donation Recieved from</h4>
+              <input type="text" value="ID:567" name="projectID">
+              <p><%= donations[i].donatorName %></p>
+              <p><%= donations[i].donatorEmail %></p>
+              <p><%= donations[i].donatorPhone %></p>
+              <p><%= donations[i].paymentMethod %></p>
+              <input type="text" value="<%= donations[i].amountRecieved %>">
+              <button type="submit" formaction="/financial/a" class="btn btn-success">Approve</button>
+              <button type="submit" formaction="/financial/b" class="btn btn-danger">Decline</button>
+            </form> <br>
+          <% } %>
 
-          <form action="">
+          <form method="post" id="form" style="background-color:cornsilk; padding: 10px; width: 100%;">
+            <h4>Donation Recieved from</h4>
+            <input type="text" value="ID:567" name="projectID">
+            <p>Michael Boateng</p>
+            <p>mk@g.co</p>
+            <p>+23350505050</p>
             <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
+            <button type="submit" formaction="/financial/a"  onsubmit="document.getElementById('form').style.display = 'none' " class="btn btn-success">Approve</button>
+            <button type="submit" formaction="/financial/b" class="btn btn-danger">Decline</button>
+          </form> <br> -->
 
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-          <br>
-          
+          <form method="post" id="form" style="background-color:cornsilk; padding: 10px; width: 100%;">
+            <h4>Donation Recieved for</h4>
+            <input type="text" value="ID:567" name="projectID">
+            <br>
+            <h3>GHS 50000</h3>
+        
+            <!-- <input type="text" value="$10000"> -->
+            <button type="submit" formaction="/financial/a"  onsubmit="document.getElementById('form').style.display = 'none' " class="btn btn-success">Update Financial Status</button>
+          </form> <br>
         
         </div>
 

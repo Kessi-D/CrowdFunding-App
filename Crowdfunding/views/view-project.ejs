@@ -66,6 +66,9 @@
                 >
                   <a href="/donate" class="nav-link">Donate</a>
                 </button>
+
+                <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#enroll"> Donate </button>
+
                 <ul class="list-unstyled mt-3 mb-4">
                   <li>
                     <div class="progress">
@@ -320,4 +323,74 @@
     </div>
   </div>
 </div>
+
+<div
+      class="modal fade"
+      id="enroll"
+      tabindex="-1"
+      aria-labelledby="enrollLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="enrollLabel">Payment</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p class="lead">Fill out this form and we will get back to you</p>
+            <form action="/processDonations" method="post">
+              <div class="mb-3">
+                <label for="first-name" class="col-form-label">
+                  Project ID:
+                </label>
+                <input type="text" class="form-control" value="<%= project._id%>" name="projectDonatedTo" />
+              </div>
+              <div class="mb-3">
+                <label for="first-name" class="col-form-label">
+                  Full Name:
+                </label>
+                <input type="text" class="form-control" id="first-name" name="DonatorFullName" />
+              </div>
+              <div class="mb-3">
+                <label for="email" class="col-form-label">Email:</label>
+                <input type="email" class="form-control" id="email" name="DonatorEmail" />
+              </div>
+              <div class="mb-3">
+                <label for="phone" class="col-form-label">Phone:</label>
+                <input type="tel" class="form-control" id="phone" name="DonatorPhone" />
+              </div>
+
+              <div class="mb-3">
+                <label for="phone" class="col-form-label">Payment Method:</label> <br>
+                <input type="radio" name="paymentMethod" id="" value="bank"> <label for="">Bank Account</label> <br>
+                <input type="radio" name="paymentMethod" id="" value="momo"> <label for="">Mobile Money</label>
+              </div>
+            
+              <div class="mb-3">
+                  <label for="phone" class="col-form-label">Amount:</label>
+                  <input type="number" class="form-control"  name="DonatorAmount" />
+              </div>
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
+          </div>
+          
+        </div>
+      </div>
+    </div>
 <%- include("footer") %>

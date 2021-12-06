@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 
-const connection = mongoose.connect('mongodb://127.0.0.1:27017/users')
+const connection = mongoose.connect('mongodb://127.0.0.1:27017/CrowdFunding')
 .then(()=>{console.log('Sucessfully connected to monngDB')})
 .catch(()=>{console.log('Could not connect to mongoDB')})
 
-const adminUserSchema = new mongoose.Schema ({
+const usersSchema = new mongoose.Schema ({
 
     firstname: {
         type: String,
@@ -16,15 +16,14 @@ const adminUserSchema = new mongoose.Schema ({
         minlength: 3,
         maxlength: 200
     },
-    email : {
+    profilePic : {
         type:String,
-        required: true,
-        unique: true,
         trim:true
     },
-    role: {
+    email: {
         type:String,
-        required: true,  
+        unique: true,
+        
     },
     password : {
         type:String,
@@ -34,6 +33,6 @@ const adminUserSchema = new mongoose.Schema ({
     }
 })
 
-let AdminUser = mongoose.model('Admin-User', adminUserSchema);
+let User = mongoose.model('User', usersSchema);
 
-module.exports = AdminUser;
+module.exports = User;

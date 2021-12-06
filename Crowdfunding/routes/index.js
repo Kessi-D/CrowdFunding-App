@@ -6,8 +6,9 @@ const mongoose = require('mongoose')
 var passport = require('passport')
 
 const Project = require('../models/Project')
-// const User = require('../models/User')
+const User = require('../models/User')
 const AdminUser = require('../models/adminUser')
+const Donation = require('../models/Donation')
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/CrowdFunding')
@@ -21,27 +22,6 @@ const bcrypt = require('bcrypt')
 const uploadInitialStagePics = multer({dest:'public/images/initial_stage_pics'});
 const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 
-const usersSchema = new mongoose.Schema ({
-
-  firstname: {
-      type: String,
-      minlength: 3,
-      maxlength: 200
-  },
-  lastname:{
-      type: String,
-      minlength: 3,
-      maxlength: 200
-  },
-  email: {
-      type:String,
-      unique: true,
-      
-  },
-  password: String
-})
-
-let User = mongoose.model('User', usersSchema);
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
@@ -166,7 +146,7 @@ router.post('/addme', async (req,res, next)=>{
 })
 
 router.get('/login', (req,res)=>{
-  res.render('login')
+  res.render('login2')
 })
 
 router.get('/login2', (req,res)=>{
@@ -225,5 +205,24 @@ router.get('/auth/git', passport.authenticate('github', {session: false}), (req,
 router.get('/feed', (req,res)=>{
   res.render('feed')
 })
+
+
+router.post('/processDonations', async (req,res)=>{
+ 
+  let newDonation = new Donation({
+    projectID: req.body.projectDonatedTo,
+    donatorName: req.body.DonatorFullName,
+    donatorEmail: req.body.DonatorEmail,
+    donatorPhone: req.body.DonatorPhone,
+    paymentMethod: req.body.paymentMethod,
+    amountRecieved: req.body.DonatorAmount
+  })
+
+  let done = await newDonation.save()
+
+  res.redirect(`/view-project/${req.body.projectDonatedTo}`)
+})
+
+
 
 module.exports = router;

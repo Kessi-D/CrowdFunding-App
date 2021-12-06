@@ -108,7 +108,7 @@
         
 
       <% for(var j=0; j < project.initalImages.length; j++) { %>
-        <div class="col-sm-6 col-lg-4 mb-4">
+        <div class="col-sm-6 col-lg-6 mb-4">
             <div class="card">
                 <img src="/images/initial_stage_pics/<%= project.initalImages[j] %>" alt="">
             </div>
@@ -123,7 +123,7 @@
       
 
       <% for(var j=0; j < project.finalImages.length; j++) { %>
-        <div class="col-sm-6 col-lg-4 mb-4">
+        <div class="col-sm-6 col-lg-6 mb-4">
             <div class="card">
                 <img src="/images/final_stage_pics/<%= project.finalImages[j] %>" alt="">
             </div>
@@ -160,46 +160,7 @@
 
           <br>
 
-          <h4 class="fst-italic">Reviewer buttons</h4>
-          <a class="btn btn-outline-secondary disabled">Approve</a>
-          <a class="btn btn-outline-primary" href="#">Edit</a>
-          <a class="btn btn-outline-primary" href="#">Delete</a>
-
-          <br>
-          <br>
-
-          <h4 class="fst-italic">Financial Administrator buttons</h4>
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-          <br>
-          <p class="mb-0">The <%= project.percentage %> % of money recieved should be shown here with a progress bar.</p>
+          
         
         </div>
 

@@ -1,10 +1,13 @@
 var express = require('express');
 var router = express.Router();
-const Project = require('../models/Project')
 const multer = require('multer');
 const fs = require('fs')
 const mongoose = require('mongoose')
 var passport = require('passport')
+
+const Project = require('../models/Project')
+// const User = require('../models/User')
+const AdminUser = require('../models/adminUser')
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/CrowdFunding')
@@ -13,7 +16,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/CrowdFunding')
 
 
 var passport = require('passport');
-var bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt')
 
 const uploadInitialStagePics = multer({dest:'public/images/initial_stage_pics'});
 const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
@@ -140,35 +143,49 @@ router.post('/addme', async (req,res, next)=>{
   const userPassword1 = req.body.password2;
 
 
-  console.log(userFirstname)
-  console.log(userLastname)
-  console.log(userEmail)
-  console.log(userPassword)
-  console.log(userPassword1)
-
-  const salt = await bcrypt.genSaltSync(10);
+  const salt = await bcrypt.genSalt(10);
 
   if(userPassword === userPassword1){
-      const user = new User({
-          firstname: userFirstname,
-          lastname: userLastname,
-          email:  userEmail,
-          password: await bcrypt.hash(userPassword, salt),
-          
-      }).save()
-      .then( item =>{
-          res.send('item saved to database')
-      }).catch(error=>{
-          res.status(400).send('unable to save in database')
-      })
- 
+
+    const user = new User({
+      firstname: userFirstname,
+      lastname: userLastname,
+      email:  userEmail,
+      password: await bcrypt.hash(userPassword, salt),  
+    }).save()
+    .then( item =>{
+      res.redirect('/login')
+    }).catch(error=>{
+      res.status(400).send('unable to save in database')
+    })
+    
+  } else {
+    return res.send("Passwords are not the same")
   }
-  
-  else{res.send('password does not match')}
-  
-  res.send('saved !')
+
 })
 
+router.get('/login', (req,res)=>{
+  res.render('login')
+})
+
+router.get('/login2', (req,res)=>{
+  res.render('login2')
+})
+
+
+router.post('/loginUsers', async (req,res, next)=>{
+
+  let userAdmin = await AdminUser.findOne({ email: req.body.email })
+  if (!userAdmin) return res.status(400).send("Invalid email or password.")
+
+  const validPassword = await bcrypt.compare(req.body.password, userAdmin.password)
+  if (!validPassword) return res.status(400).send("Invalid email or password.")
+
+  res.cookie('userEmail', req.body.email)
+
+  res.redirect(`/${userAdmin.role}`)
+})
 
 // ===================Delete,Edit and View Posts===============
 // router.get('/:id', (req,res)=>{
@@ -208,7 +225,5 @@ router.get('/auth/git', passport.authenticate('github', {session: false}), (req,
 router.get('/feed', (req,res)=>{
   res.render('feed')
 })
-router.get('/login', (req,res)=>{
-  res.render('login')
-})
+
 module.exports = router;

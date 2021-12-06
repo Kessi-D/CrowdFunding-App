@@ -11,7 +11,8 @@ const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 /* GET home page. */
 router.get('/', async function(req, res, next) {
   const projects = await Project.find()
-  res.render('financial-index', { title: 'Express', projects:projects });
+
+  res.render('financial-index', { title: 'Express', projects:projects, userEmail: req.cookies.userEmail });
 });
 
 router.get('/view-project/:id', async (req, res) => {
@@ -99,5 +100,10 @@ router.post('/sendToAdmin', async (req, res) => {
   }, {new:true});
 
   res.redirect('/reviewer')
+});
+
+router.get('/logout', async (req, res) => {
+  res.clearCookie('userEmail')
+  res.redirect('/')
 });
 module.exports = router;

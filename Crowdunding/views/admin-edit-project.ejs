@@ -79,16 +79,6 @@
                         <label for="exampleFormControlInput1" class="form-label">Amount Needed</label>
                         <input type="number" class="form-control"  name="projectAmountNeeded" placeholder="0.00" value="<%= project.amountAsked %>">
                     </div>
-
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Project Status</label>
-                        <select class="form-select" name="projectStatus" aria-label="Default select example">
-                            <option selected>Project Status</option>
-                            <option value="Active" <%= project.status == "Active" ? "selected":"" %>>Active</option>
-                            <option value="Reviewing" <%= project.status == "Reviewing" ? "selected":"" %>>Reviewing</option>
-                            <option value="Approved" <%= project.status == "Approved" ? "selected":"" %>>Approved</option>
-                        </select>
-                    </div>
                 
                     <div class="mb-3">
                         <label for="formFileMultiple" class="form-label">Initial Stage Images</label>

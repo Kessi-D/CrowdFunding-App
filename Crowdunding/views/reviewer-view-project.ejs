@@ -145,49 +145,18 @@
   
         <div class="p-4 mb-3 bg-light rounded">
 
+          <p>Project Buttons</p>
+          <a href="/reviewer/edit-project/<%= project._id %>"  class="btn btn-outline-primary" href="#">Edit</a>
+          <a href="/reviewer/delete-project/<%= project._id %>"  class="btn btn-outline-danger" href="#">Delete</a>
+          <br> <br>
+
           <h4 class="fst-italic">Reviewer buttons</h4>
           <form action="/reviewer/sendToAdmin" method="post">
             <input type="text" name="projectID" value="<%= project._id %>">
             <button class="btn btn-success">Approve Project</button>
           </form>
           <br>
-          <p>Project Buttons</p>
-          <a href="/reviewer/edit-project/<%= project._id %>"  class="btn btn-outline-primary" href="#">Edit</a>
-          <a href="/reviewer/delete-project/<%= project._id %>"  class="btn btn-outline-danger" href="#">Delete</a>
-          <br>
-
-          <h4 class="fst-italic">Financial Administrator buttons</h4>
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-          <br>
-          <p class="mb-0">The <%= project.percentage %> % of money recieved should be shown here with a progress bar.</p>
+          
         
         </div>
 

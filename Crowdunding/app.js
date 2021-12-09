@@ -2,12 +2,17 @@ var createError = require('http-errors')
 var express = require('express')
 var path = require('path')
 var cookieParser = require('cookie-parser')
+var session = require('express-session')
 var logger = require('morgan')
 var router = require('./routes/index')
 var passport = require('passport')
-var config = require('./passport.js')
+require('dotenv').config()
+var {config, fbConfig, google} = require('./passport.js')
 var GitHubStrategy = require('passport-github').Strategy
+var GoogleStrategy = require('passport-google-oauth20').Strategy;
+var FacebookStrategy = require ('passport-facebook').Strategy
 var methodOverride = require('method-override')
+
 
 
 var indexRouter = require('./routes/index');
@@ -15,6 +20,10 @@ var indexRouter = require('./routes/index');
 var adminRouter = require('./routes/admin')
 var reviewerRouter = require('./routes/reviewer')
 var financialRouter = require('./routes/financial')
+
+const AdminUser = require('./models/adminUser');
+
+const { authUser, authRole } = require('./basicAuth');
 
 var app = express();
 
@@ -29,13 +38,21 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'))
 
+app.use(setUser)
+
 app.use('/', indexRouter);
 // app.use('/users', usersRouter);
-app.use('/login', router)
-app.use('/admin', adminRouter)
-app.use('/reviewer', reviewerRouter)
-app.use('/financial', financialRouter)
+app.use('/admin', authUser, authRole('admin'), adminRouter)
+app.use('/reviewer', authUser, authRole('reviewer'), reviewerRouter)
+app.use('/financial',authUser, authRole('financial'), financialRouter)
+app.use(passport.initialize())
+app.use(passport.session())
 
+app.use(session({
+  resave: false,
+  saveUninitialized: true,
+  secret: 'crowdfund'
+}));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -54,6 +71,22 @@ app.use(function(err, req, res, next) {
 });
 
 // ===================Passport Config===============
+passport.use(new FacebookStrategy(fbConfig,
+function(accessToken, refreshToken, profile, cb) {
+  
+    return cb(null, user);
+  
+}
+));
+// ========================google auth=================
+passport.use(new GoogleStrategy(google,
+  function(accessToken, refreshToken, profile, cb) {
+   
+      return cb(null, profile);
+  
+  }
+));
+// ========================github auth=======================
 passport.use(new GitHubStrategy.Strategy(config,
   function(accessToken, refreshToken, profile, cb) {
   console.log(profile)
@@ -63,13 +96,30 @@ passport.use(new GitHubStrategy.Strategy(config,
 
 
 }
-))
-// passport.serializeUser((user, cb) => {
-//   cb(null, user);
-// });
+));
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, 'views/index.html'))
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
 });
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);  
+  });
+});
+
+async function setUser(req,res,next){
+
+  const loggedInUserEmail = req.cookies.userEmail
+
+  if(loggedInUserEmail){
+    req.user = await AdminUser.find({ email : loggedInUserEmail })
+  }
+
+  console.log(req.user)
+
+  next()
+}
 // ====================================================
 module.exports = app;

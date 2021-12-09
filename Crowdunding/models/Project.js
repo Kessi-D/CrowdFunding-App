@@ -48,6 +48,11 @@ const projectSchema = new mongoose.Schema({
       trim:true,
       required: true,
     },
+    country : {
+      type:String,
+      trim:true,
+      required: true,
+    },
     currency : {
       type:String,
       trim:true,
@@ -78,6 +83,10 @@ const projectSchema = new mongoose.Schema({
     percentage: {
       type: Number,
       default: 0,
+    },
+    reviewer: {
+      type: String,
+      default: null
     }
     
 }, {timestamps: true});

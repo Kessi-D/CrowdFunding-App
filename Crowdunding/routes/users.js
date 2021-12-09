@@ -1,8 +1,8 @@
-// var express = require('express');
-// var router = express.Router();
-// const User = require('../models/User')
-// var passport = require('passport');
-// var bcrypt = require('bcrypt')
+var express = require('express');
+var router = express.Router();
+const User = require('../models/User')
+var passport = require('passport');
+var bcrypt = require('bcrypt')
 
 // /* GET users listing. */
 // router.get('/login', function(req, res, next) {
@@ -58,4 +58,4 @@
 // })
 
 
-// module.exports = router;
+module.exports = router;

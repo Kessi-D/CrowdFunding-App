@@ -97,7 +97,7 @@
     <br>
 
   <div class="row g-5">
-    <div class="col-md-8">
+    <div class="col-md-7">
       <h3 class="pb-4 mb-4 fst-italic border-bottom">
         <%= project.title %>
       </h3>
@@ -108,7 +108,7 @@
         
 
       <% for(var j=0; j < project.initalImages.length; j++) { %>
-        <div class="col-sm-6 col-lg-4 mb-4">
+        <div class="col-sm-6 col-lg-6 mb-4">
             <div class="card">
                 <img src="/images/initial_stage_pics/<%= project.initalImages[j] %>" alt="">
             </div>
@@ -123,7 +123,7 @@
       
 
       <% for(var j=0; j < project.finalImages.length; j++) { %>
-        <div class="col-sm-6 col-lg-4 mb-4">
+        <div class="col-sm-6 col-lg-6 mb-4">
             <div class="card">
                 <img src="/images/final_stage_pics/<%= project.finalImages[j] %>" alt="">
             </div>
@@ -139,48 +139,29 @@
 
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-5">
       <div class="position-sticky" style="top: 2rem;">
 
   
         <div class="p-4 mb-3 bg-light rounded">
-          
 
           <h4 class="fst-italic">Financial Administrator buttons</h4>
 
-          <p class="mb-0">The <%= project.percentage %> % of money recieved should be shown here with a progress bar.</p>
-          
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
+          <progress id="file" max="<%= project.amountAsked %>" value="<%= project.moneyPledged %>"> <%= project.percentage %> </progress>
+          <label for=""><%= project.percentage %>% </label>
 
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
+          <p class="mb-0">The amount recieved:  <%= project.moneyPledged %> GHS </p>
+          <p class="mb-0">The Money asked: <%= project.amountAsked %> GHS   </p>
+          <p class="mb-0">The Percentage: <%= project.percentage %>% </p>
           <br>
-          
+
+          <form method="post" action="/financial/processDonations"  style="background-color:cornsilk; padding: 10px; width: 100%;">
+            <h4>Donations Recieved</h4>
+            <input type="text" value="<%= project._id %>" name="projectID">
+            <label for="">Enter Total Amount recieved for the project</label>
+            <input type="number" name="donationsRecieved">
+            <button type="submit" class="btn btn-success">Update Financial Status</button>
+          </form> <br>
         
         </div>
 

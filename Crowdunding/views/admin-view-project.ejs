@@ -149,57 +149,25 @@
           <a href="/admin/edit-project/<%= project._id %>" class="btn btn-outline-primary ">Edit</a>
           <a class="btn btn-outline-danger" href="/admin/delete-project/<%= project._id %>">Delete</a>
 
+          <br> <br>
+
+          <form action="/admin/processSendToReviewer" method="post">
+
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Project ID</label>
+              <input type="text" class="form-control" name="projectID" value="<%= project._id %>">
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Reviewer</label>
+              <select class="form-select" aria-label="Default select example" name="reviewer">
+                <% for (let i = 0; i < reviewers.length; i++) { %>
+                  <option value="<%= reviewers[i].email %>"><%= reviewers[i].email %></option>
+                <% } %>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-secondary">Send to Reviewer</button>
+          </form>
           
-          <h4 class="fst-italic">Administrator buttons</h4>
-          
-          <form action="/admin/uploadOnline" method="post">
-            <input type="text" name="projectID" value="<%= project._id %>">
-            <button class="btn btn-success">Upload Online</button>
-          </form>
-          <br>
-
-          <br>
-
-          <h4 class="fst-italic">Reviewer buttons</h4>
-          <a class="btn btn-outline-secondary disabled">Approve</a>
-          <a class="btn btn-outline-primary" href="#">Edit</a>
-          <a class="btn btn-outline-primary" href="#">Delete</a>
-
-          <br>
-          <br>
-
-          <h4 class="fst-italic">Financial Administrator buttons</h4>
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-
-          <form action="">
-            <input type="text" value="$10000">
-            <button class="btn btn-success">Approve</button>
-            <button class="btn btn-danger">Decline</button>
-          </form>
-          <br>
-          <p class="mb-0">The <%= project.percentage %> % of money recieved should be shown here with a progress bar.</p>
         
         </div>
 

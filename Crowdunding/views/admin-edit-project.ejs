@@ -7,7 +7,7 @@
 
                     <h1>Edit Project</h1>
 
-                    <div class="mb-3" hidden>
+                    <div class="mb-3" >
                         <label for="exampleFormControlInput1" class="form-label">Project ID</label>
                         <select class="form-select" name="projectToEditID" aria-label="Default select example">
                             <option value="<%= project._id %>"selected><%= project._id %></option>
@@ -56,12 +56,12 @@
                
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Start Date</label>
-                        <input type="date" class="form-control"  name="startDate" placeholder="name@example.com">
+                        <input type="date" class="form-control"  name="startDate" value="<%= project.startDate %>" placeholder="name@example.com">
                     </div>
         
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">End Date</label>
-                        <input type="date" class="form-control"  name="endDate" placeholder="name@example.com">
+                        <input type="date" class="form-control"  name="endDate" value="<%= project.endDate %>" placeholder="name@example.com">
                     </div>
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Currency</label>

@@ -100,7 +100,6 @@ router.post('/processAdminProjectEdit', cpUpload , async (req, res) => {
     socailMedia : req.body.socialLinks,
     currency : req.body.Currency,
     amountAsked : req.body.projectAmountNeeded,
-    status : req.body.projectStatus,
     initalImages : initalPics,
     finalImages : finalPics
 

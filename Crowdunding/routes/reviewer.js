@@ -10,7 +10,12 @@ const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
-  const projects = await Project.find({ status: "review" })
+  let signedUser = req.user[0]
+
+  const projects = await Project.find({ status: "review", reviewer : signedUser.email })
+
+  console.log(projects)
+  
   res.render('reviewer-index', { title: 'Express', projects:projects, userEmail: req.cookies.userEmail });
 });
 
@@ -23,6 +28,7 @@ router.get('/edit-project/:id', async (req, res) => {
   const project = await Project.findById(req.params.id)
   res.render('reviewer-edit-project', { title: 'Express', project:project });
 });
+
 
 // i dont understand something here
 const cpUpload = uploadInitialStagePics.fields([{ name: 'initialStageImgs', maxCount: 3 }, { name: 'finalStageImgs', maxCount: 3 }]);
@@ -71,7 +77,6 @@ router.post('/processReviewerProjectEdit', cpUpload , async (req, res) => {
     socailMedia : req.body.socialLinks,
     currency : req.body.Currency,
     amountAsked : req.body.projectAmountNeeded,
-    status : req.body.projectStatus,
     initalImages : initalPics,
     finalImages : finalPics
 

@@ -6,7 +6,7 @@ const connection = mongoose.connect('mongodb://127.0.0.1:27017/CrowdFunding')
 
 const roleSchema = new mongoose.Schema({
     role: {
-       category: String,
+       type: String,
        required: true,
     }
 })

@@ -42,6 +42,17 @@ app.use(setUser)
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
+
+app.use('/admin',  adminRouter)
+app.use('/reviewer',  reviewerRouter)
+app.use('/financial', financialRouter)
+
+// app.use('/', indexRouter);
+// // app.use('/users', usersRouter);
+// app.use('/admin', authUser, authRole('admin'), adminRouter)
+// app.use('/reviewer', authUser, authRole('reviewer'), reviewerRouter)
+// app.use('/financial',authUser, authRole('financial'), financialRouter)
+=======
 // app.use('/admin', adminRouter)
 // app.use('/reviewer', reviewerRouter)
 // app.use('/financial', financialRouter)
@@ -123,6 +134,10 @@ async function setUser(req,res,next){
   if(loggedInUserEmail){
     req.user = await AdminUser.find({ email : loggedInUserEmail })
   }
+
+  // console.log(req.user)
+
+=======
 
   next()
 }

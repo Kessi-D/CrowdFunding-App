@@ -3,7 +3,7 @@
 <div class="container">
     <div class="row justify-content-md-center">
         <div class="col-sm-4">
-            <form  method="post" action="/processProjectUpload" enctype="multipart/form-data" >
+            <form  method="post" action="/send" >
                
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Project Title</label>
@@ -28,10 +28,15 @@
                     </div>
         
                     <div class="mb-3">
-                        <label for="exampleFormControlTextarea1" class="form-label">Organization (NGO, group of friends etc.) executing the project</label>
+                        <label for="exampleFormControlTextarea1" class="form-label">Name of Organization (NGO, group of friends etc.) executing the project</label>
                         <input type="text" class="form-control" name="projectParticipants" placeholder="Location">
                     </div>
-        
+
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label"></label>
+                        <input type="text" class="form-control" name="projectParticipants" placeholder="Location">
+                    </div>
+
                     <div class="mb-3">
                         <label for="exampleFormControlTextarea1" class="form-label">Description of the impact on the digital transformation of Africa</label>
                         <textarea class="form-control"  name="projectImpactInAfrica" rows="3"></textarea>
@@ -49,18 +54,23 @@
                         <label for="exampleFormControlInput1" class="form-label">Start Date</label>
                         <input type="date" class="form-control"  name="startDate" placeholder="name@example.com">
                     </div>
-        
+       
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">End Date</label>
                         <input type="date" class="form-control"  name="endDate" placeholder="name@example.com">
                     </div>
                     <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Country</label>
+                        <select class="form-select" aria-label="Default select example" name="country">
+                            <option value="GHS">Ghana</option>
+                            <option value="BKF">Burkina Faso</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Currency</label>
-                        <select class="form-select" aria-label="Default select example" name="Currency">
-                            <option selected>Open this select menu</option>
+                        <select class="form-select" aria-label="Default select example" name="currency">
                             <option value="GHS">GHS</option>
-                            <option value="USD">USD</option>
-                            <option value="GBP">GBP</option>
+                            <option value="CFA">CFA</option>
         
                         </select>
                     </div>

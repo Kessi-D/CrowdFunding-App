@@ -6,7 +6,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.88.1">
-    <title>{{ title }}</title>
+    <title><%= title %></title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/headers/">
 
@@ -66,22 +66,24 @@
 
   <div class="container">
     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+      <a href="/" class="d-flex align-items-cregisterenter mb-2 mb-lg-0 text-dark text-decoration-none">
         <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
       </a>
 
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
         <li><a href="#" class="nav-link px-2 link-secondary">Overview</a></li>
-        <li><a href="#" class="nav-link px-2 link-dark">Inventory</a></li>
-        <li><a href="#" class="nav-link px-2 link-dark">Customers</a></li>
-        <li><a href="#" class="nav-link px-2 link-dark">Products</a></li>
+        <li><a href="/admin/register" class="nav-link px-2 link-dark">Create Admins</a></li>
+        <li><a href="/admin/users" class="nav-link px-2 link-dark">Remove Users</a></li>
       </ul>
 
       <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
         <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
       </form>
 
-      <div class="dropdown text-end">
+      <p><%= userEmail %></p>
+
+      <!-- <div class="dropdown text-end">
+        
         <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
           <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
         </a>
@@ -92,7 +94,9 @@
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item" href="#">Sign out</a></li>
         </ul>
-      </div>
+      </div> -->
+
+      <a href="/admin/logout" class="nav-link px-2 link-secondary">LogOut</a>
     </div>
   </div>
 
@@ -106,7 +110,7 @@
       <% for(var i=0; i< projects.length; i++) { %>
         <div class="col">
           <div class="card shadow-sm">
-            <img src="/images/final_stage_pics/<%= projects[i].finalImages[0] %>" alt="">
+            <img src="/images/final_stage_pics/<%= projects[i].finalImages[0] %>" alt="" class="img-fluid">
 
             <div class="card-body">
               <p class="card-text text-truncate"><%= projects[i].description %></p>

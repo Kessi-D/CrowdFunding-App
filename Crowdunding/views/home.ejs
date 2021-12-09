@@ -1,82 +1,123 @@
-<%- include("navbar") %> 
-<!-- Bootstrap CSS -->     
-          <div class="p-5 mb-4 bg-secondary rounded-3">
-            <div class="container-fluid py-5">
-              <h1 class="display-5 fw-bold">Display Projects</h1>
-              <p class="col-md-8 fs-4">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae distinctio eos temporibus ab, modi quo qui tenetur officiis explicabo rem minus voluptatibus quod debitis esse sapiente numquam dignissimos aperiam labore..</p>
-              <button class="btn btn-primary btn-lg" type="button">More</button>
-            </div>
-          </div>
-       <br><br>
-        
-        <div class="container">
-          <div class="row align-items-md-stretch">
-            <div class="col-md-6">
-              <div class="h-100 p-5 text-white bg-dark rounded-3">
-                <h2>Display Projects</h2>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit voluptates, molestias delectus quis exercitationem reiciendis! Debitis, non. Debitis asperiores, explicabo ipsam, dignissimos doloremque consectetur a eveniet alias odit atque accusantium.</p>
-                <button class="btn btn-outline-light" type="button">Donate</button>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="h-100 p-5 bg-light border rounded-3">
-                <h2>Add borders</h2>
-                <p>Or, keep it light and add a border for some added definition to the boundaries of your content. Be sure to look under the hood at the source HTML here as we've adjusted the alignment and sizing of both column's content for equal-height.</p>
-                <button class="btn btn-outline-secondary" type="button">Example button</button>
-              </div>
-            </div>
-          </div>
-          <br><br><br>
-          <div class="container">
-            <div class="row">
-              <!-- loop through the project model and render the ejs -->
-              <% for (var i=0; i < projects.length; i++) { %>
-                <div class="col align-self-end">
-                  <div class="card" style="width: 18rem;">
-                    <a href="/view-project/<%= projects[i]._id %>"><img class="card-img-top" src="/images/final_stage_pics/<%= projects[i].finalImages[0] %>" alt="project image">
-                    </a>
-                    
-                    <div class="card-body">
-                      <h5 class="project-title"><a href="/view-project/<%= projects[i]._id %>"  class="text-decoration-none"><%= projects[i].title %></a></h5><hr>
-                      <p class="project-text text-truncate"><%= projects[i].description %></p>
-                    </div>
-                    
-                    <div class="card-body">
-                      <p>Catergory: Health</p>
-                      <p>$<%= projects[i].moneyPledged %> raised</p>
-                      <p>$<%= projects[i].amountAsked %> </p>
-                     
-                      <form action="<%= projects[i]._id %>?_method=DELETE"><button>Delete</button></form>
-                
-                     
-                               
-                    <div class="progress">
-                      <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div> 
-                    
-                    </div>
-              
-                    <!-- <div class="card-body">
-                      <a href="#" class="card-link">Card link</a>
-                      <a href="#" class="card-link">Another link</a>
-                    </div> -->
-                  </div>
-                </div>
+<%- include("navbar") %>
+<!-- Bootstrap CSS -->
 
-              <% } %>
+
+<div class="p-5 mb-4 bg-success rounded-3">
+  <div class="container-fluid py-5">
+    <h1 class="display-5 fw-bold">Display Projects</h1>
+    <p class="col-md-8 fs-4">
+      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae
+      distinctio eos temporibus ab, modi quo qui tenetur officiis explicabo rem
+      minus voluptatibus quod debitis esse sapiente numquam dignissimos aperiam
+      labore..
+    </p>
+    <button class="btn btn-primary btn-lg" type="button">More</button>
+  </div>
+</div>
+<br /><br />
+
+<div class="container">
+  <div class="row align-items-md-stretch">
+    <div class="col-md-6">
+      <div class="h-100 p-5 text-white bg-dark rounded-3">
+        <h2>Display Projects</h2>
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit
+          voluptates, molestias delectus quis exercitationem reiciendis!
+          Debitis, non. Debitis asperiores, explicabo ipsam, dignissimos
+          doloremque consectetur a eveniet alias odit atque accusantium.
+        </p>
+        <button class="btn btn-outline-light" type="button">Donate</button>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="h-100 p-5 bg-light border rounded-3">
+        <h2>Recent projects</h2>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia
+          pariatur nihil minima deleniti, consequuntur esse inventore blanditiis
+          dolorum accusantium odio sed modi numquam! Impedit laboriosam maiores
+          dolores, odio facilis ullam!.
+        </p>
+      </div>
+    </div>
+  </div>
+  <br /><br /><br />
+
+  
+  <div class="container">
+    <div class="row">
+
+      <h3 class="pb-2 border-bottom">Projects in Ghana</h3><br> <br>
+      <!-- loop through the project model and render the ejs -->
+      <% for (var i=0; i < ghanaProjects.length; i++) { %>
+        <div class="col align-self-end">
+          <div class="card mb-5" style="width: 18rem;">
+            <a href="/view-project/<%= ghanaProjects[i]._id %>"><img class="card-img-top" src="/images/final_stage_pics/<%= ghanaProjects[i].finalImages[0] %>" alt="project image">
+            </a>
+            
+            <div class="card-body">
+              <h5 class="project-title"><a href="/view-project/<%= ghanaProjects[i]._id %>"  class="text-decoration-none"><%= ghanaProjects[i].title %></a></h5><hr>
+              <p class="project-text text-truncate"><%= ghanaProjects[i].description %></p>
+              <p>Catergory: IT & Software</p>
+              <p><b>GHS <%= ghanaProjects[i].moneyPledged %> raised</b> of GHS <%= ghanaProjects[i].amountAsked %> </p>
+                       
+              <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+              </div> 
+            </div>
+
+      
+            <!-- <div class="card-body">
+              <a href="#" class="card-link">Card link</a>
+              <a href="#" class="card-link">Another link</a>
+            </div> -->
+          </div>
+        </div>
+
+      <% } %>
+
+  
+    </div>
+
+    <br>
+  <div class="conatainer">
+    
+  </div>
+    <div class="row">
+
+      <h3 class="pb-2 border-bottom">Projects in Burkina Faso</h3><br> <br>
+      <!-- loop through the project model and render the ejs -->
+      <% for (var i=0; i < burkinaProjects.length; i++) { %>
+        <div class="col align-self-end">
+          <div class="card" style="width: 18rem;">
+            <a href="/view-project/<%= burkinaProjects[i]._id %>"><img class="card-img-top" src="/images/final_stage_pics/<%= burkinaProjects[i].finalImages[0] %>" alt="project image">
+            </a>
+            
+            <div class="card-body">
+              <h5 class="project-title"><a href="/view-project/<%= burkinaProjects[i]._id %>"  class="text-decoration-none"><%= burkinaProjects[i].title %></a></h5><hr>
+              <p class="project-text text-truncate"><%= burkinaProjects[i].description %></p>
+              <p>Catergory: Health</p>
+              <p><b>CFA <%= burkinaProjects[i].moneyPledged %> raised</b> of CFA <%= burkinaProjects[i].amountAsked %> </p>
+                  
               
-                  <!-- <div class="card-body">
-                    <a href="#" class="card-link">Card link</a>
-                    <a href="#" class="card-link">Another link</a>
-                  </div> -->
-                </div>
-    
-              </div>
-    
-          
-           
-        
-        <%- include("footer") %> 
-    
-    
-        
+              <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+              </div> 
+            </div>
+
+      
+            <!-- <div class="card-body">
+              <a href="#" class="card-link">Card link</a>
+              <a href="#" class="card-link">Another link</a>
+            </div> -->
+          </div>
+        </div>
+
+      <% } %>
+      
+    </div>
+  </div>
+</div>
+
+<%- include("footer") %>

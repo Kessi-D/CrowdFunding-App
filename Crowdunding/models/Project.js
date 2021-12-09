@@ -48,6 +48,11 @@ const projectSchema = new mongoose.Schema({
       trim:true,
       required: true,
     },
+    country : {
+      type:String,
+      trim:true,
+      required: true,
+    },
     currency : {
       type:String,
       trim:true,

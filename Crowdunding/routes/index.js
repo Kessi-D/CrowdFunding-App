@@ -1,10 +1,13 @@
 var express = require('express');
 var router = express.Router();
-const Project = require('../models/Project')
 const multer = require('multer');
 const fs = require('fs')
 const mongoose = require('mongoose')
 var passport = require('passport')
+
+const Project = require('../models/Project')
+const User = require('../models/User')
+const AdminUser = require('../models/adminUser')
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/CrowdFunding')
@@ -13,38 +16,27 @@ mongoose.connect('mongodb://127.0.0.1:27017/CrowdFunding')
 
 
 var passport = require('passport');
-var bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt')
 
 const uploadInitialStagePics = multer({dest:'public/images/initial_stage_pics'});
 const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 
-const usersSchema = new mongoose.Schema ({
-
-  firstname: {
-      type: String,
-      minlength: 3,
-      maxlength: 200
-  },
-  lastname:{
-      type: String,
-      minlength: 3,
-      maxlength: 200
-  },
-  email: {
-      type:String,
-      unique: true,
-      
-  },
-  password: String
-})
-
-let User = mongoose.model('User', usersSchema);
-
 /* GET home page. */
-router.get('/', async function(req, res, next) {
-  const projects = await Project.find();
+// router.get('/', async function(req, res, next) {
+  
+//   const ghanaProjects = await Project.find({country:"GHS"});
+//   const burkinaProjects = await Project.find({country:"BKF"});
 
-  res.render('home', {projects:projects});
+//   res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects});
+// });
+
+
+router.get('/', async function(req, res, next) {
+  
+  const ghanaProjects = await Project.find({country:"GHS", status:"Active"});
+  const burkinaProjects = await Project.find({country:"BKF", status:"Active"});
+
+  res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects});
 });
 
 router.get('/create-project', (req,res)=>{
@@ -69,7 +61,9 @@ router.get('/view-project/:id', async (req,res)=>{
 });
 
 const cpUpload = uploadInitialStagePics.fields([{ name: 'initialStageImgs', maxCount: 3 }, { name: 'finalStageImgs', maxCount: 3 }])
-router.post('/processProjectUpload', cpUpload, async (req, res)=>{
+
+// ===========router saves the created project by user============
+router.post('/processProjectUpload', cpUpload, async (req, res)=>{       
   let initalPics = [];
   let finalPics = [];
 
@@ -111,7 +105,8 @@ router.post('/processProjectUpload', cpUpload, async (req, res)=>{
     startDate : req.body.startDate,
     endDate : req.body.endDate,
     socailMedia : req.body.socialLinks,
-    currency : req.body.Currency,
+    country : req.body.country,
+    currency : req.body.currency,
     amountAsked : req.body.projectAmountNeeded,
     status : req.body.projectStatus,
     initalImages : initalPics,
@@ -128,6 +123,7 @@ router.get('/register', (req, res)=>{
   res.render('register')
 });
 
+
 // router.get('/post-page',(req,res)=>{
 //   res.render('p-o-page.ejs')
 // } )
@@ -140,35 +136,49 @@ router.post('/addme', async (req,res, next)=>{
   const userPassword1 = req.body.password2;
 
 
-  console.log(userFirstname)
-  console.log(userLastname)
-  console.log(userEmail)
-  console.log(userPassword)
-  console.log(userPassword1)
-
-  const salt = await bcrypt.genSaltSync(10);
+  const salt = await bcrypt.genSalt(10);
 
   if(userPassword === userPassword1){
-      const user = new User({
-          firstname: userFirstname,
-          lastname: userLastname,
-          email:  userEmail,
-          password: await bcrypt.hash(userPassword, salt),
-          
-      }).save()
-      .then( item =>{
-          res.send('item saved to database')
-      }).catch(error=>{
-          res.status(400).send('unable to save in database')
-      })
- 
+
+    const user = new User({
+      firstname: userFirstname,
+      lastname: userLastname,
+      email:  userEmail,
+      password: await bcrypt.hash(userPassword, salt),  
+    }).save()
+    .then( item =>{
+      res.redirect('/login')
+    }).catch(error=>{
+      res.status(400).send('unable to save in database')
+    })
+    
+  } else {
+    return res.send("Passwords are not the same")
   }
-  
-  else{res.send('password does not match')}
-  
-  res.send('saved !')
+
 })
 
+router.get('/login', (req,res)=>{
+  res.render('login2')
+})
+
+router.get('/login2', (req,res)=>{
+  res.render('login2')
+})
+
+
+router.post('/loginUsers', async (req,res, next)=>{
+
+  let userAdmin = await AdminUser.findOne({ email: req.body.email })
+  if (!userAdmin) return res.status(400).send("Invalid email or password.")
+
+  const validPassword = await bcrypt.compare(req.body.password, userAdmin.password)
+  if (!validPassword) return res.status(400).send("Invalid email or password.")
+
+  res.cookie('userEmail', req.body.email)
+
+  res.redirect(`/${userAdmin.role}`)
+})
 
 // ===================Delete,Edit and View Posts===============
 // router.get('/:id', (req,res)=>{
@@ -198,17 +208,71 @@ router.post('/addme', async (req,res, next)=>{
 // }
 // })
 
-// ==================passport route===============
+// ==================passport route github===============
 router.get('/git', passport.authenticate('github'))
 
 
 router.get('/auth/git', passport.authenticate('github', {session: false}), (req, res)=>{
   res.render('p-o-page')
 })
-router.get('/feed', (req,res)=>{
-  res.render('feed')
-})
-router.get('/login', (req,res)=>{
-  res.render('login')
-})
+
+
+// =======================passport fb ================
+router.get('/auth/facebook',
+  passport.authenticate('facebook'));
+
+router.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { 
+    failureRedirect: '/login',
+    successRedirect: '/profile'
+   }),
+  // function(req, res) {
+    // Successful authentication, redirect home.
+  //   res.redirect('/');
+  // } 
+  );
+
+  router.get('/auth/facebook',
+  passport.authenticate('facebook', { session: false }),
+  function(req, res) {
+    res.json({ id: req.user.id, username: req.user.username });
+  });
+
+  // ====================passport google==================
+router.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile'] }));
+
+router.get('/google/callback', 
+  passport.authenticate('google', { session: false  }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/donate');
+  });
+
+  router.get('/donate', (req,res)=>{
+    res.render('donate-form')
+  })
+//  =============passport sessions===================
+  // router.get('/donate',
+  // passport.authenticate('google', { session: false }),
+  // function(req, res) {
+    
+  // });
+ router.get('/home', (req,res)=>{
+   res.render('admin')
+ })
+  router.get('/auth/facebook',
+  passport.authenticate('google', { session: false }),
+  function(req, res) {
+    res.json({ id: req.user.id, username: req.user.username });
+  });
+
+  router.get('/failed', (req, res)=>{
+    res.send('failed to user login ')
+  });
+  router.get('/profile', (req, res)=>{
+    res.send('Successful user login ')
+  })
+
+
 module.exports = router;

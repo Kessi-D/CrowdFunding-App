@@ -4,19 +4,24 @@ const multer = require('multer');
 const fs = require('fs')
 
 const Project = require('../models/Project')
+const Donation = require('../models/Donation')
 
 const uploadInitialStagePics = multer({dest:'public/images/initial_stage_pics'});
 const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
+ 
   const projects = await Project.find()
-  res.render('financial-index', { title: 'Express', projects:projects });
+
+  res.render('financial-index', { title: 'Express', projects:projects, userEmail: req.cookies.userEmail });
 });
 
 router.get('/view-project/:id', async (req, res) => {
   const project = await Project.findById(req.params.id)
-  res.render('financial-view-project', { title: 'Express', project:project });
+  const donations = await Donation.find({ projectID: req.params.id, status: "NotApproved"})
+
+  res.render('financial-view-project', { title: 'Express', project:project, donations:donations });
 });
 
 router.get('/edit-project/:id', async (req, res) => {
@@ -100,4 +105,65 @@ router.post('/sendToAdmin', async (req, res) => {
 
   res.redirect('/reviewer')
 });
+
+router.get('/logout', async (req, res) => {
+  res.clearCookie('userEmail')
+  res.redirect('/')
+});
+
+
+router.post('/a', async (req, res) => {
+  res.send("Approved!!!!")
+});
+
+router.post('/b', async (req, res) => {
+  res.send("Declined!!!!")
+});
+
+router.post('/processDonations', async (req,res)=>{
+  let sum = 0;
+
+
+  let projectID = req.body.projectID;
+  let project = await Project.findById(projectID)
+
+  // console.log(req.body.projectID)
+
+  let initialMoneyPledged = project.moneyPledged;
+  let moneyAskedFor = project.amountAsked;
+
+  // console.log(initialMoneyPledged)
+  // console.log(moneyAskedFor)
+
+  let newMoneyPledged = req.body.donationsRecieved;
+
+  sum = Number(initialMoneyPledged) + Number(newMoneyPledged) ;
+
+  function calculatePercent(a,b){
+    let percent = (a/b) * 100;
+    return percent;
+  }
+
+  let percentSum = calculatePercent(sum,moneyAskedFor);
+
+  // // console.log(moneyAskedFor)
+  // // console.log(sum)
+  // // console.log(percentSum)
+
+  // // sum = sum + amountApproved;
+
+  // // console.log(sum)
+
+  // // console.log(projectID)
+  // // console.log(amountApproved)
+
+  const UpdateProjectMoneyRecieved = await Project.findByIdAndUpdate(projectID, {
+    moneyPledged : sum,
+    percentage: percentSum,
+  }, {new:true});
+
+  res.redirect(`/financial/view-project/${projectID}`)
+})
+
+
 module.exports = router;

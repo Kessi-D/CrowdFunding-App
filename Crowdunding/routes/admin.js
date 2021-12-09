@@ -2,8 +2,10 @@ var express = require('express');
 var router = express.Router();
 const multer = require('multer');
 const fs = require('fs')
+const bcrypt = require('bcrypt')
 
 const Project = require('../models/Project')
+const AdminUser = require('../models/adminUser')
 
 const uploadInitialStagePics = multer({dest:'public/images/initial_stage_pics'});
 const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
@@ -11,13 +13,18 @@ const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 /* GET home page. */
 router.get('/', async function(req, res, next) {
   const projects = await Project.find()
-  res.render('admin-index', { title: 'Express', projects:projects });
+  res.render('admin-index', { title: 'Express', projects:projects, userEmail: req.cookies.userEmail });
 });
 
 router.get('/view-project/:id', async (req, res) => {
   const project = await Project.findById(req.params.id)
   res.render('admin-view-project', { title: 'Express', project:project });
 });
+
+router.get('/register', async (req, res) => {
+  res.render('admin-register')
+});
+
 
 router.get('/edit-project/:id', async (req, res) => {
   const project = await Project.findById(req.params.id)
@@ -100,4 +107,55 @@ router.post('/uploadOnline', async (req, res) => {
 
   res.redirect('/admin')
 });
+
+router.get('/delete-project/:id', async (req, res) => {
+  const project = await Project.findById(req.params.id)
+
+  await project.delete();
+
+  res.redirect('/admin')
+});
+
+
+router.post('/processAdminRegister', async (req, res) => {
+  console.log(req.body.firstName)
+  console.log(req.body.lastName)
+  console.log(req.body.email)
+  console.log(req.body.role)
+  console.log(req.body.password1)
+  console.log(req.body.password2)
+
+  let userAdmin = await AdminUser.findOne({ email: req.body.email })
+  if (userAdmin) return res.status(400).send("User already registered.")
+
+  const salt = await bcrypt.genSalt(10);
+
+  if(req.body.password1 === req.body.password2){
+
+    userAdmin = new AdminUser({
+      firstname: req.body.firstName,
+      lastname: req.body.lastName,
+      email : req.body.email,
+      role: req.body.role,
+      password : await bcrypt.hash(req.body.password1, salt),   
+    }).save()
+    .then( item =>{
+      res.redirect('/admin')
+    }).catch(error=>{
+      res.status(400).send('unable to save in database')
+    })
+    
+  } else {
+    return res.send("Passwords are not the same")
+  }
+});
+
+router.get('/logout', async (req, res) => {
+  res.clearCookie('userEmail')
+  res.redirect('/')
+});
+
+
+
+
 module.exports = router;

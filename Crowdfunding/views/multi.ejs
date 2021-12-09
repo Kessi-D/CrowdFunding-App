@@ -1,0 +1,99 @@
+<%- include("navbar") %>
+
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-sm-4">
+            <form  method="post" action="/processProjectUpload" enctype="multipart/form-data" >
+               
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Project Title</label>
+                        <input type="text" class="form-control" name="projectTitle" placeholder="Project Title..">
+                    </div>
+                      
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+                        <textarea class="form-control"  name="projectDescription" rows="3"></textarea>
+                    </div>
+            
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">Aimed end result</label>
+                        <textarea class="form-control"  name="projectAimedEndResult" rows="3"></textarea>
+                    </div>
+        
+        
+             
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">GPS location of the project, region and country in Africa</label>
+                        <input type="text" class="form-control" name="projectLocation" placeholder="Location">
+                    </div>
+        
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">Organization (NGO, group of friends etc.) executing the project</label>
+                        <input type="text" class="form-control" name="projectParticipants" placeholder="Location">
+                    </div>
+        
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">Description of the impact on the digital transformation of Africa</label>
+                        <textarea class="form-control"  name="projectImpactInAfrica" rows="3"></textarea>
+                    </div>
+        
+          
+
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Links to social media</label>
+                    <input type="text" class="form-control" name="socialLinks" placeholder="Social Media..">
+                </div>
+        
+               
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Start Date</label>
+                        <input type="date" class="form-control"  name="startDate" placeholder="name@example.com">
+                    </div>
+       
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">End Date</label>
+                        <input type="date" class="form-control"  name="endDate" placeholder="name@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Country</label>
+                        <select class="form-select" aria-label="Default select example" name="country">
+                            <option value="GHS">Ghana</option>
+                            <option value="BKF">Burkina Faso</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Currency</label>
+                        <select class="form-select" aria-label="Default select example" name="currency">
+                            <option value="GHS">GHS</option>
+                            <option value="CFA">CFA</option>
+        
+                        </select>
+                    </div>
+                    
+        
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Amount Needed</label>
+                        <input type="number" class="form-control"  name="projectAmountNeeded" placeholder="0.00">
+                    </div>
+        
+
+              
+        
+                
+                    <div class="mb-3">
+                        <label for="formFileMultiple" class="form-label">Initial Stage Images</label>
+                        <input class="form-control" type="file" name="initialStageImgs" id="formFileMultiple" multiple>
+                    </div>
+        
+                    <div class="mb-3">
+                        <label for="formFileMultiple" class="form-label">Final Stage Images</label>
+                        <input class="form-control" type="file" name="finalStageImgs" id="formFileMultiple" multiple>
+                    </div>
+    
+                <button type="submit" class="btn btn-success">Create Project</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- include("footer") %>

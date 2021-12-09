@@ -3,6 +3,9 @@ var router = express.Router();
 const multer = require('multer');
 const fs = require('fs')
 const bcrypt = require('bcrypt')
+var bodyParser = require('body-parser')
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
+var sendEMailToReviewer = require ('../gmail-notification')
 
 
 const Project = require('../models/Project')
@@ -27,7 +30,8 @@ router.get('/', async function(req, res, next) {
   const countProjects = await Project.find().count()
 
 
-  const projects = await Project.find()
+  let projects = await Project.find()
+  projects = projects.slice(0,5 )
 
 
   res.render('admin-dashboard', { countProjects: countProjects, countTotalUsers: countTotalUsers, projects:projects})
@@ -197,7 +201,7 @@ router.get('/admin-dashboard', async (req,res)=>{
   const adminUsers = await AdminUser.find().count()
   const countTotalUsers = totalUsers + adminUsers
   const countProjects = await Project.find().count()
-  const projects = await Project.find()
+  let projects = await Project.find()
   res.render('admin-dashboard', { countProjects: countProjects, countTotalUsers: countTotalUsers, projects:projects})
 }) 
 
@@ -209,13 +213,15 @@ router.get('/users', async (req, res) => {
 });
 
 
-router.post('/processSendToReviewer' , async (req,res)=>{
+router.post('/processSendToReviewer', urlencodedParser, async (req,res)=>{
 
   const updateProjectStatus = await Project.findByIdAndUpdate(req.body.projectID, {
     reviewer: req.body.reviewer,
     status : "review",
   }, {new:true});
 
+  sendEMailToReviewer(req.body.reviewer) 
+  
   res.redirect('/admin/projects')
 });
 

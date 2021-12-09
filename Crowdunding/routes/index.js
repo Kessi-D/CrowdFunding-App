@@ -4,6 +4,10 @@ const multer = require('multer');
 const fs = require('fs')
 const mongoose = require('mongoose')
 var passport = require('passport')
+var bodyParser = require('body-parser')
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
+var {sendEMailToReviewer, sendEmailtoAdmin} = require ('../gmail-notification')
+
 
 const Project = require('../models/Project')
 const User = require('../models/User')
@@ -63,7 +67,7 @@ router.get('/view-project/:id', async (req,res)=>{
 const cpUpload = uploadInitialStagePics.fields([{ name: 'initialStageImgs', maxCount: 3 }, { name: 'finalStageImgs', maxCount: 3 }])
 
 // ===========router saves the created project by user============
-router.post('/processProjectUpload', cpUpload, async (req, res)=>{       
+router.post('/processProjectUpload', cpUpload, urlencodedParser, async (req, res)=>{       
   let initalPics = [];
   let finalPics = [];
 
@@ -115,6 +119,8 @@ router.post('/processProjectUpload', cpUpload, async (req, res)=>{
   });
 
   await project.save();
+
+  sendEmailtoAdmin(req.body.projectParticipants, req.body.projectTitle, req.body.projectLocation)
 
   res.redirect('/')
 })
@@ -180,33 +186,6 @@ router.post('/loginUsers', async (req,res, next)=>{
   res.redirect(`/${userAdmin.role}`)
 })
 
-// ===================Delete,Edit and View Posts===============
-// router.get('/:id', (req,res)=>{
-//   res.send('show view page' + req.params.id)
-// })
-
-// router.get('/:id/edit', (req,res)=>{
-//   res.send('edit view page' +req.params.id)
-//   // res.render('p-o-page')
-// })
-// router.post('/:id', (req,res)=>{
-//   res.send('update view page' + req.params.id)
-// })
-
-// router.delete('/:id', async(req,res)=>{
-// let project 
-// try {
-//   project = await Project.findById(req.params.id)
-//   await project.remove()
-//   res.send('deleted')
-// } catch{
-//   if (project == null){
-//     res.redirect('/')
-//   }else {
-//     res.redirect( Z1   )
-//   }
-// }
-// })
 
 // ==================passport route github===============
 router.get('/git', passport.authenticate('github'))

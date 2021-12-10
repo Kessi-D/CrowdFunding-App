@@ -66,22 +66,24 @@
 
   <div class="container">
     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+      <a href="/" class="d-flex align-items-cregisterenter mb-2 mb-lg-0 text-dark text-decoration-none">
         <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
       </a>
 
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
         <li><a href="#" class="nav-link px-2 link-secondary">Overview</a></li>
-        <li><a href="#" class="nav-link px-2 link-dark">Inventory</a></li>
-        <li><a href="#" class="nav-link px-2 link-dark">Customers</a></li>
-        <li><a href="#" class="nav-link px-2 link-dark">Products</a></li>
+        <li><a href="/admin/register" class="nav-link px-2 link-dark">Create Admins</a></li>
+        <li><a href="/admin/users" class="nav-link px-2 link-dark">Users List</a></li>
       </ul>
 
       <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
         <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
       </form>
 
-      <div class="dropdown text-end">
+      <p><%= userEmail %></p>
+
+      <!-- <div class="dropdown text-end">
+        
         <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
           <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
         </a>
@@ -92,80 +94,79 @@
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item" href="#">Sign out</a></li>
         </ul>
+      </div> -->
+
+      <a href="/admin/logout" class="nav-link px-2 link-secondary">LogOut</a>
+    </div>
+  </div>
+
+  <div class="album py-5 bg-light">
+    <br>
+    <div class="container">
+
+      <h2 class="pb-2 border-bottom">Approved Projects by Reviewers</h2><br>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+      <% for(var i=0; i< projectsFromReviewers.length; i++) { %>
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="/images/final_stage_pics/<%= projectsFromReviewers[i].finalImages[0] %>" alt="" class="img-fluid">
+
+            <div class="card-body">
+              <p class="card-text text-truncate"><%= projectsFromReviewers[i].description %></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a type="button" href="/admin/view-project/<%= projectsFromReviewers[i]._id %>" class="btn btn-sm btn-outline-secondary">View</a>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                </div>
+                <small class="text-muted">9 mins</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% } %>
+
       </div>
     </div>
-    <br>
 
-  <div class="row g-5">
-    <div class="col-md-8">
-      <h3 class="pb-4 mb-4 fst-italic border-bottom">
-        <%= project.title %>
-      </h3>
+    <div class="container">
 
-      <article class="blog-post">
-        <%= project.description %>
-      </article>
-        
 
-      <% for(var j=0; j < project.initalImages.length; j++) { %>
-        <div class="col-sm-6 col-lg-4 mb-4">
-            <div class="card">
-                <img src="/images/initial_stage_pics/<%= project.initalImages[j] %>" alt="">
+      <h2 class="pb-2 border-bottom">Rejected Projects by Reviewers</h2><br>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+      <% for(var i=0; i< deniedProject.length; i++) { %>
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="/images/final_stage_pics/<%= deniedProject[i].finalImages[0] %>" alt="" class="img-fluid">
+
+            <div class="card-body">
+              <p class="card-text text-truncate"><%= deniedProject[i].description %></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a type="button" href="/admin/view-project/<%= deniedProject[i]._id %>" class="btn btn-sm btn-outline-secondary">View</a>
+                  <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                </div>
+                <small class="text-muted">9 mins</small>
+              </div>
             </div>
           </div>
-        
-      <% } %>
-
-      <article class="blog-post">
-        <%= project.endResult %>
-      </article>
-
-      
-
-      <% for(var j=0; j < project.finalImages.length; j++) { %>
-        <div class="col-sm-6 col-lg-4 mb-4">
-            <div class="card">
-                <img src="/images/final_stage_pics/<%= project.finalImages[j] %>" alt="">
-            </div>
-          </div>
-        
-      <% } %>
-
-      <article class="blog-post">
-        <%= project.impact %>
-      </article>
-
-
-
-    </div>
-
-    <div class="col-md-4">
-      <div class="position-sticky" style="top: 2rem;">
-
-  
-        <div class="p-4 mb-3 bg-light rounded">
-
-          <h4 class="fst-italic">Administrator buttons</h4>
-          <p class="mb-0">Review Status: <%= project.status %></p>
-          <a href="/admin/edit-project/<%= project._id %>" class="btn btn-outline-primary ">Edit</a>
-          <a class="btn btn-outline-danger" href="/admin/delete-project/<%= project._id %>">Delete</a>
-
-          <br> <br>
-
-          
-          <h4 class="fst-italic">Administrator buttons</h4>
-          
-          <form action="/admin/uploadOnline" method="post">
-            <input type="text" name="projectID" value="<%= project._id %>" hidden>
-            <button class="btn btn-success">Upload Online</button>
-          </form>
-          
-        
         </div>
+      <% } %>
+
+      </div>
+    </div>
 
 
 </main>
 
+
+
+    <script src="/assets/dist/js/bootstrap.bundle.min.js"></script>
+
+      
+  </body>
+  
 <div class="container">
   <footer class="py-3 my-4">
     <ul class="nav justify-content-center border-bottom pb-3 mb-3">
@@ -179,12 +180,4 @@
   </footer>
 </div>
 
-
-    <script src="/assets/dist/js/bootstrap.bundle.min.js"></script>
-
-      
-  </body>
 </html>
-
-
-

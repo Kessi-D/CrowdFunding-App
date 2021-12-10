@@ -5,7 +5,7 @@ const fs = require('fs')
 const bcrypt = require('bcrypt')
 var bodyParser = require('body-parser')
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
-var sendEMailToReviewer = require ('../gmail-notification')
+var {sendEMailToReviewer} = require ('../gmail-notification')
 
 
 const Project = require('../models/Project')
@@ -18,11 +18,19 @@ const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 /* GET home page. */
 router.get('/projects', async function(req, res, next) {
   const projectsFromVistors = await Project.find({ status: "inactive" })
-  const projectsFromReviewers = await Project.find({ status: "reviewed" })
+  
+  
 
-  res.render('admin-index', { title: 'Express', projectsFromVistors:projectsFromVistors, projectsFromReviewers:projectsFromReviewers, userEmail: req.cookies.userEmail });
+  res.render('admin-index', { title: 'Express', projectsFromVistors:projectsFromVistors, userEmail: req.cookies.userEmail});
 });
 
+// ==========render reviewed pages===================
+router.get('/reviewed', async (req, res, next)=>{
+  const projectsFromReviewers = await Project.find({ status: "reviewed"})
+  const deniedProject = await Project.find({ status: "denied"})
+  res.render('reviewed-page', {title: 'Reviewed', projectsFromReviewers:projectsFromReviewers, deniedProject:deniedProject, userEmail: req.cookies.userEmail})
+})
+// ===============render admin home page=============
 router.get('/', async function(req, res, next) {
   const totalUsers = await User.find().count()
   const adminUsers = await AdminUser.find().count()
@@ -33,17 +41,20 @@ router.get('/', async function(req, res, next) {
   let projects = await Project.find()
   projects = projects.slice(0,5 )
 
+  let reviewedProjects = await Project.find({status:"reviewed"} || {status:"denied"})
+  reviewedProjects = reviewedProjects.slice(0,5)
 
-  res.render('admin-dashboard', { countProjects: countProjects, countTotalUsers: countTotalUsers, projects:projects})
+  res.render('admin-dashboard', { countProjects: countProjects, countTotalUsers: countTotalUsers, projects:projects, reviewedProjects:reviewedProjects})
 });
 
+// =======================================================
 
 router.get('/view-project/:id', async (req, res) => {
   const project = await Project.findById(req.params.id)
   const reviewers = await AdminUser.find({role: "reviewer"})
 
   if (project.status === "reviewed") res.render('admin-view-project-reviewed', { title: 'Express', project:project });
-
+  if (project.status === "denied") res.render ('denied-project-reviewed', {title: 'Express', project:project })
   res.render('admin-view-project', { title: 'Express', project:project, reviewers:reviewers });
 });
 
@@ -195,14 +206,7 @@ router.get('/logout', async (req, res) => {
   res.clearCookie('userEmail')
   res.redirect('/')
 });
-router.get('/admin-dashboard', async (req,res)=>{
-  const totalUsers = await User.find().count()
-  const adminUsers = await AdminUser.find().count()
-  const countTotalUsers = totalUsers + adminUsers
-  const countProjects = await Project.find().count()
-  let projects = await Project.find()
-  res.render('admin-dashboard', { countProjects: countProjects, countTotalUsers: countTotalUsers, projects:projects})
-}) 
+
 
 router.get('/users', async (req, res) => {
   const adminUsers = await AdminUser.find()

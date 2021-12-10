@@ -14,7 +14,7 @@ const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 router.get('/', async function(req, res, next) {
   let projects;
 
-<<<<<<< HEAD
+
   if (req.user){
     let signedUser = req.user[0];
     projects = await Project.find({ status: "review", reviewer : signedUser.email })
@@ -25,7 +25,7 @@ router.get('/', async function(req, res, next) {
   const projects = await Project.find({ status: "review", reviewer : signedUser.email })
 
   // console.log(projects)
->>>>>>> d499a012e233e25a4f5cabdd7dd2dd9bfb2620f2
+
   
   res.render('reviewer-index', { title: 'Reviewer', projects:projects, userEmail: req.cookies.userEmail });
 });

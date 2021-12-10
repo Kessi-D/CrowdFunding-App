@@ -41,12 +41,12 @@ app.use(methodOverride('_method'))
 
 app.use(setUser)
 
-<<<<<<< HEAD
+
 app.use('/', indexRouter);
 // app.use('/users', usersRouter);
-=======
 
->>>>>>> d499a012e233e25a4f5cabdd7dd2dd9bfb2620f2
+
+
 
 app.use('/admin',  adminRouter)
 app.use('/reviewer',  reviewerRouter)
@@ -56,10 +56,7 @@ app.use('/', indexRouter);
 // app.use('/admin', authUser, authRole('admin'), adminRouter)
 // app.use('/reviewer', authUser, authRole('reviewer'), reviewerRouter)
 // app.use('/financial',authUser, authRole('financial'), financialRouter)
-<<<<<<< HEAD
-=======
 
->>>>>>> d499a012e233e25a4f5cabdd7dd2dd9bfb2620f2
 
 app.use(passport.initialize())
 app.use(passport.session())
@@ -145,12 +142,11 @@ async function setUser(req,res,next){
 
   // console.log(req.user)
 
-<<<<<<< HEAD
+
   // console.log(req.cookies.userEmail)
   // console.log(projectOwner)
 
-=======
->>>>>>> d499a012e233e25a4f5cabdd7dd2dd9bfb2620f2
+
 
 
   next()

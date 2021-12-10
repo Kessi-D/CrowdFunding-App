@@ -5,11 +5,13 @@ const fs = require('fs')
 const bcrypt = require('bcrypt')
 var bodyParser = require('body-parser')
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
-<<<<<<< HEAD
+
 var {sendEMailToReviewer, sendEmailtoAdmin} = require ('../gmail-notification')
 =======
 var {sendEMailToReviewer} = require ('../gmail-notification')
->>>>>>> d499a012e233e25a4f5cabdd7dd2dd9bfb2620f2
+
+var {sendEMailToReviewer} = require ('../gmail-notification')
+
 
 
 const Project = require('../models/Project')

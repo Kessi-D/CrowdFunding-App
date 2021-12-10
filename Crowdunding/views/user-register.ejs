@@ -70,7 +70,6 @@
           <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
             <li><a href="#" class="nav-link px-2 link-secondary">Overview</a></li>
             <li><a href="/admin/register" class="nav-link px-2 link-dark">Create Admins</a></li>
-            <li><a href="/admin/register" class="nav-link px-2 link-dark">Remove Users</a></li>
           </ul>
     
           <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
@@ -94,23 +93,55 @@
   <br><br>
 
   <div class="col-md-4 mx-auto col-lg-3">
-    <form class="p-4 p-md-5 border rounded-3 bg-light">
+    <form class="p-4 p-md-5 border rounded-3 bg-light" action="/processProjectOwnerRegister" method="post">
       <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+        <input type="text" class="form-control" id="floatingInput" name="firstName" required>
+        <label for="floatingInput">First Name</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="floatingInput" name="lastName" required>
+        <label for="floatingInput">Last Name</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="floatingInput" name="email" required>
         <label for="floatingInput">Email address</label>
       </div>
+
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+        <input type="text" class="form-control" id="floatingInput" name="address" required>
+        <label for="floatingInput">Address</label>
+      </div>
+
+
+      <div class="form-floating mb-3">
+        
+        <select class="form-select" aria-label="Default select example" name="country" required>
+            <option value="GHS">Ghana</option>
+            <option value="GHS">Burkina Faso</option>
+        </select>
+        <label for="exampleFormControlInput1" class="form-label">Country</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        
+        <select class="form-select" aria-label="Default select example" name="role" required>
+            <option value="project-owner">Project Owner</option>
+        </select>
+        <label for="exampleFormControlInput1" class="form-label">Role</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="floatingPassword" name="password1" required>
         <label for="floatingPassword">Password</label>
       </div>
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="floatingPassword" name="password2" required>
+        <label for="floatingPassword">Confirm Password</label>
       </div>
-      <button class="w-100 btn btn-lg btn-primary" type="submit">Sign In</button>
+
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Register Person</button>
       <hr class="my-4">
-      <small class="text-muted">Don't have an account? <a href="#">Sign Up</a></small>
+      <small class="text-muted">Have an account? <a href="/user-login">Log In</a></small>
     </form>
   </div>
 
@@ -123,3 +154,5 @@
       
   </body>
 </html>
+
+

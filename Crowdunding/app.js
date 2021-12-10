@@ -22,6 +22,7 @@ var reviewerRouter = require('./routes/reviewer')
 var financialRouter = require('./routes/financial')
 
 const AdminUser = require('./models/adminUser');
+const ProjectOwner = require('./models/projectOwner')
 
 const { authUser, authRole } = require('./basicAuth');
 
@@ -39,6 +40,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'))
 
 app.use(setUser)
+
+
+app.use('/', indexRouter);
+// app.use('/users', usersRouter);
+
 
 
 
@@ -120,11 +126,26 @@ async function setUser(req,res,next){
 
   const loggedInUserEmail = req.cookies.userEmail
 
+  let projectOwner;
+  let adminUser;
+
   if(loggedInUserEmail){
-    req.user = await AdminUser.find({ email : loggedInUserEmail })
+    adminUser = await AdminUser.findOne({ email : loggedInUserEmail })
+    projectOwner = await ProjectOwner.find({ email : loggedInUserEmail })
+
+    if (adminUser){
+      req.user = adminUser;
+    } else {
+      req.user = projectOwner[0];
+    }
   }
 
   // console.log(req.user)
+
+
+  // console.log(req.cookies.userEmail)
+  // console.log(projectOwner)
+
 
 
 

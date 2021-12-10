@@ -5,7 +5,7 @@ const fs = require('fs')
 const bcrypt = require('bcrypt')
 var bodyParser = require('body-parser')
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
-var sendEMailToReviewer = require ('../gmail-notification')
+var {sendEMailToReviewer, sendEmailtoAdmin} = require ('../gmail-notification')
 
 
 const Project = require('../models/Project')

@@ -10,11 +10,14 @@ const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
-  let signedUser = req.user[0]
+  let projects;
 
-  const projects = await Project.find({ status: "review", reviewer : signedUser.email })
-
-  console.log(projects)
+  if (req.user){
+    let signedUser = req.user[0];
+    projects = await Project.find({ status: "review", reviewer : signedUser.email })
+  }
+  
+  projects = await Project.find({ status: "review" })
   
   res.render('reviewer-index', { title: 'Express', projects:projects, userEmail: req.cookies.userEmail });
 });

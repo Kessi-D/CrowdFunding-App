@@ -22,6 +22,7 @@ var reviewerRouter = require('./routes/reviewer')
 var financialRouter = require('./routes/financial')
 
 const AdminUser = require('./models/adminUser');
+const ProjectOwner = require('./models/projectOwner')
 
 const { authUser, authRole } = require('./basicAuth');
 
@@ -40,7 +41,7 @@ app.use(methodOverride('_method'))
 
 app.use(setUser)
 
-// app.use('/', indexRouter);
+app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 
 app.use('/admin',  adminRouter)
@@ -52,16 +53,6 @@ app.use('/financial', financialRouter)
 // app.use('/admin', authUser, authRole('admin'), adminRouter)
 // app.use('/reviewer', authUser, authRole('reviewer'), reviewerRouter)
 // app.use('/financial',authUser, authRole('financial'), financialRouter)
-=======
-// app.use('/admin', adminRouter)
-// app.use('/reviewer', reviewerRouter)
-// app.use('/financial', financialRouter)
-
-app.use('/', indexRouter);
-app.use('/admin', authUser, authRole('admin'), adminRouter)
-app.use('/reviewer', authUser, authRole('reviewer'), reviewerRouter)
-app.use('/financial',authUser, authRole('financial'), financialRouter)
-
 
 app.use(passport.initialize())
 app.use(passport.session())
@@ -131,13 +122,26 @@ async function setUser(req,res,next){
 
   const loggedInUserEmail = req.cookies.userEmail
 
+  let projectOwner;
+  let adminUser;
+
   if(loggedInUserEmail){
-    req.user = await AdminUser.find({ email : loggedInUserEmail })
+    adminUser = await AdminUser.findOne({ email : loggedInUserEmail })
+    projectOwner = await ProjectOwner.find({ email : loggedInUserEmail })
+
+    if (adminUser){
+      req.user = adminUser;
+    } else {
+      req.user = projectOwner[0];
+    }
   }
 
   // console.log(req.user)
 
-=======
+  // console.log(req.cookies.userEmail)
+  // console.log(projectOwner)
+
+
 
   next()
 }

@@ -12,6 +12,7 @@ var {sendEMailToReviewer, sendEmailtoAdmin} = require ('../gmail-notification')
 const Project = require('../models/Project')
 const User = require('../models/User')
 const AdminUser = require('../models/adminUser')
+const ProjectOwner = require('../models/projectOwner')
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/CrowdFunding')
@@ -44,8 +45,22 @@ router.get('/', async function(req, res, next) {
 });
 
 router.get('/create-project', (req,res)=>{
-  res.render('multi')
+  if (req.user) {
+    res.render('multi');
+  } 
+  res.redirect('/user-login');
 })
+
+router.get('/user-login', (req,res)=>{
+  res.render('user-login');
+})
+
+
+router.get('/user-signup', (req,res)=>{
+  res.render('user-register');
+})
+
+
 router.get('/donate', (req,res)=>{
   res.render('donate-form')
 })
@@ -175,16 +190,47 @@ router.get('/login2', (req,res)=>{
 
 router.post('/loginUsers', async (req,res, next)=>{
 
+  let projectOwner = await ProjectOwner.findOne({ email: req.body.email })
   let userAdmin = await AdminUser.findOne({ email: req.body.email })
-  if (!userAdmin) return res.status(400).send("Invalid email or password.")
 
-  const validPassword = await bcrypt.compare(req.body.password, userAdmin.password)
-  if (!validPassword) return res.status(400).send("Invalid email or password.")
+  if (projectOwner) {
+    const poValidPassword = await bcrypt.compare(req.body.password, projectOwner.password)
+    if (!poValidPassword) return res.status(400).send("Invalid email or password.")
 
-  res.cookie('userEmail', req.body.email)
+    res.cookie('userEmail', req.body.email)
 
-  res.redirect(`/${userAdmin.role}`)
+    res.redirect('/')
+  } 
+  else if (userAdmin) {
+    const validPassword = await bcrypt.compare(req.body.password, userAdmin.password)
+    if (!validPassword) return res.status(400).send("Invalid email or password.")
+
+    res.cookie('userEmail', req.body.email)
+
+    res.redirect(`/${userAdmin.role}`)
+  } else {
+    return res.status(400).send("Invalid email or password.")
+  }
+  
+  
+
+  
+
+  // let userAdmin = await AdminUser.findOne({ email: req.body.email })
+  // if (!userAdmin) return res.status(400).send("Invalid email or password.")
+
+  // const validPassword = await bcrypt.compare(req.body.password, userAdmin.password)
+  // if (!validPassword) return res.status(400).send("Invalid email or password.")
+
+  // res.cookie('userEmail', req.body.email)
+
+  // res.redirect(`/${userAdmin.role}`)
 })
+
+router.get('/logout', async (req, res) => {
+  res.clearCookie('userEmail')
+  res.redirect('/')
+});
 
 
 // ==================passport route github===============
@@ -252,6 +298,36 @@ router.get('/google/callback',
   router.get('/profile', (req, res)=>{
     res.send('Successful user login ')
   })
+
+router.post('/processProjectOwnerRegister', async (req, res) => {
+
+    let projectOwner = await ProjectOwner.findOne({ email: req.body.email })
+    if (projectOwner) return res.status(400).send("User already registered.")
+  
+    const salt = await bcrypt.genSalt(10);
+  
+    if(req.body.password1 === req.body.password2){
+  
+      projectOwner = new ProjectOwner({
+        firstname: req.body.firstName,
+        lastname: req.body.lastName,
+        email: req.body.email,
+        address: req.body.address,
+        country: req.body.country,
+        role: req.body.role,
+        password : await bcrypt.hash(req.body.password1, salt),   
+      }).save()
+      .then( item =>{
+        res.redirect('/user-login')
+      }).catch(error=>{
+        res.status(400).send('unable to save in database')
+      })
+      
+    } else {
+      return res.send("Passwords are not the same")
+    }
+});
+
 
 
 module.exports = router;

@@ -152,12 +152,19 @@
 
           <br> <br>
 
-          
-          <h4 class="fst-italic">Administrator buttons</h4>
-          
-          <form action="/admin/uploadOnline" method="post">
+          <form action="/email" method="post">
+            
+            <fieldset>
+              <legend>Send Email</legend>
+              <label for="email">To:</label>
+              <input type="email" id="email" name="email" ><br><br>
+              <label for="subject">Subject:</label>
+              <input type="text" id="subject" name="email"><br><br>
+              <textarea name="body" id="" cols="30" rows="10"></textarea>
+            </fieldset>
             <input type="text" name="projectID" value="<%= project._id %>" hidden>
-            <button class="btn btn-success">Upload Online</button>
+            <button class="btn btn-success mt-3">Send</button>
+
           </form>
           
         

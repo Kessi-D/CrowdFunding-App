@@ -2,8 +2,10 @@ var express = require('express');
 var router = express.Router();
 const multer = require('multer');
 const fs = require('fs')
+var {sendApprovedMail, sendDeniedMail} = require ('../gmail-notification')
 
-const Project = require('../models/Project')
+const Project = require('../models/Project');
+const AdminUser = require('../models/adminUser');
 
 const uploadInitialStagePics = multer({dest:'public/images/initial_stage_pics'});
 const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
@@ -12,14 +14,20 @@ const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 router.get('/', async function(req, res, next) {
   let projects;
 
+<<<<<<< HEAD
   if (req.user){
     let signedUser = req.user[0];
     projects = await Project.find({ status: "review", reviewer : signedUser.email })
   }
   
   projects = await Project.find({ status: "review" })
+=======
+  const projects = await Project.find({ status: "review", reviewer : signedUser.email })
+
+  // console.log(projects)
+>>>>>>> d499a012e233e25a4f5cabdd7dd2dd9bfb2620f2
   
-  res.render('reviewer-index', { title: 'Express', projects:projects, userEmail: req.cookies.userEmail });
+  res.render('reviewer-index', { title: 'Reviewer', projects:projects, userEmail: req.cookies.userEmail });
 });
 
 router.get('/view-project/:id', async (req, res) => {
@@ -27,10 +35,10 @@ router.get('/view-project/:id', async (req, res) => {
   res.render('reviewer-view-project', { title: 'Express', project:project });
 });
 
-router.get('/edit-project/:id', async (req, res) => {
-  const project = await Project.findById(req.params.id)
-  res.render('reviewer-edit-project', { title: 'Express', project:project });
-});
+// router.get('/edit-project/:id', async (req, res) => {
+//   const project = await Project.findById(req.params.id)
+//   res.render('reviewer-edit-project', { title: 'Express', project:project });
+// });
 
 
 // i dont understand something here
@@ -91,24 +99,40 @@ router.post('/processReviewerProjectEdit', cpUpload , async (req, res) => {
   
 });
 
-router.get('/delete-project/:id', async (req, res) => {
-  const project = await Project.findById(req.params.id)
+// router.get('/delete-project/:id', async (req, res) => {
+//   const project = await Project.findById(req.params.id)
 
-  await project.delete();
+//   await project.delete();
 
-  res.redirect('/reviewer')
-});
+//   res.redirect('/reviewer')
+// });
 
+// ==================approved project by reviewer=================
 router.post('/sendToAdmin', async (req, res) => {
   const project = await Project.findById(req.body.projectID);
-  
   const UploadProject = await Project.findByIdAndUpdate(req.body.projectID, {
-    status : "reviewed",
-  }, {new:true});
+      status : "reviewed",
+    }, {new:true})   //--find projects and update or changes the status to reviewed-//
+
+    // ===========query adminusers and grap the admin email to send approved projects to admin
+ 
+  sendApprovedMail(req.body.body)
 
   res.redirect('/reviewer')
 });
 
+
+// ==================denied project by reviewer=================
+router.post('/reviewerDenied', async (req, res) => {
+  const project = await Project.findById(req.body.projectID);
+  const UploadProject = await Project.findByIdAndUpdate(req.body.projectID, {
+    status : "denied",
+  }, {new:true});
+  
+  sendDeniedMail(req.body.body) //send denied email to admin
+  res.redirect('/reviewer')
+})
+// ==========================================================
 router.get('/logout', async (req, res) => {
   res.clearCookie('userEmail')
   res.redirect('/')

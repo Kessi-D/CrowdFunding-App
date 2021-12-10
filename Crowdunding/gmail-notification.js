@@ -82,10 +82,98 @@ async function sendEmailtoAdmin(participants, title, location){
 
   }
   
-  console.log("Message sent: %s", info.messageId);
+//   console.log("Message sent: %s", info.messageId);
   
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+//   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   
 }
 
-module.exports = {sendEMailToReviewer, sendEmailtoAdmin};
+async function sendApprovedMail(comment){
+  let info;
+const output = `
+<p>Hello,</p>
+<p>This project has been reviewed and approved.</p>
+<p>${comment}</p>
+<p>Thank You!</p>
+
+`
+// console.log(process.env.EMAIL)
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD
+  },
+  tls: {
+    rejectUnauthorized:false
+  }
+});
+
+const adminUsers = await AdminUser.find({role:"admin"})
+
+for (let i=0; i < adminUsers.length; i++){
+  const adminEmail = adminUsers[i].email
+  // console.log(userEmail)
+  // usersEmail.push(userEmail)
+    info = await transporter.sendMail({
+    from: '"Crowdfund Project Form👻" <jmsgrnbrg@gmail.com>', // sender address
+    to: adminEmail, // list of receivers
+    subject: "Reviewed Project", // Subject line
+    text: "Hello world?", // plain text body
+    html: output, // html body
+  });
+
+}
+
+//   console.log("Message sent: %s", info.messageId);
+
+//   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+}
+
+
+async function sendDeniedMail(comment){
+  let info;
+const output = `
+<p>Hello,</p>
+<p>This project has been reviewed and denied.</p>
+<p>${comment}</p>
+<p>Thank You!</p>
+
+`
+// console.log(process.env.EMAIL)
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD
+  },
+  tls: {
+    rejectUnauthorized:false
+  }
+});
+
+const adminUsers = await AdminUser.find({role:"admin"})
+
+for (let i=0; i < adminUsers.length; i++){
+  const adminEmail = adminUsers[i].email
+  // console.log(userEmail)
+  // usersEmail.push(userEmail)
+    info = await transporter.sendMail({
+    from: '"Crowdfund Project Form👻" <jmsgrnbrg@gmail.com>', // sender address
+    to: adminEmail, // list of receivers
+    subject: "Reviewed Project", // Subject line
+    text: "Hello world?", // plain text body
+    html: output, // html body
+  });
+
+}
+
+//   console.log("Message sent: %s", info.messageId);
+
+//   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+}
+
+module.exports = {
+  sendEMailToReviewer, sendEmailtoAdmin, sendApprovedMail, sendDeniedMail};

@@ -6,7 +6,7 @@ const mongoose = require('mongoose')
 var passport = require('passport')
 var bodyParser = require('body-parser')
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
-var {sendEMailToReviewer, sendEmailtoAdmin} = require ('../gmail-notification')
+var {sendEMailToReviewer, sendEmailtoAdmin, sendApprovedMail} = require ('../gmail-notification')
 
 
 const Project = require('../models/Project')
@@ -27,13 +27,13 @@ const uploadInitialStagePics = multer({dest:'public/images/initial_stage_pics'})
 const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 
 /* GET home page. */
-// router.get('/', async function(req, res, next) {
+router.get('/', async function(req, res, next) {
   
-//   const ghanaProjects = await Project.find({country:"GHS"});
-//   const burkinaProjects = await Project.find({country:"BKF"});
+  const ghanaProjects = await Project.find({country:"GHS"});
+  const burkinaProjects = await Project.find({country:"BKF"});
 
-//   res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects});
-// });
+  res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects});
+});
 
 
 router.get('/', async function(req, res, next) {
@@ -43,6 +43,9 @@ router.get('/', async function(req, res, next) {
 
   res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects});
 });
+
+
+
 
 router.get('/create-project', (req,res)=>{
   if (req.user) {
@@ -134,6 +137,8 @@ router.post('/processProjectUpload', cpUpload, urlencodedParser, async (req, res
   });
 
   await project.save();
+
+// =======gmail notification===============
 
   sendEmailtoAdmin(req.body.projectParticipants, req.body.projectTitle, req.body.projectLocation)
 

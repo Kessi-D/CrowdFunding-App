@@ -1,5 +1,5 @@
 var nodemailer = require('nodemailer')
-const AdminUser = require('../Crowdunding/models/adminUser')
+const AdminUser = require('../CrowdFunding/models/adminUser')
 
 
 async function sendEMailToReviewer (email) {
@@ -175,5 +175,87 @@ for (let i=0; i < adminUsers.length; i++){
 
 }
 
+async function sendApprovedToProjectOwner(title, firstName,email) {
+  const output = `
+  <p>Hello, ${firstName} </p>
+  <p>Your project ${title} has been APPROVED!!. You can now view it on our home page.</p>
+  <p>Thank You!</p>
+  
+`
+// console.log(process.env.EMAIL)
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD
+  },
+  tls: {
+    rejectUnauthorized:false
+  }
+});
+
+
+
+
+let info = await transporter.sendMail({
+  to: email, // list of receivers
+  subject: "Project Approved.", // Subject line
+  text: "Hello world?", // plain text body
+  html: output, // html body
+  from: '"MD Crowdfund Admin👻" <jmsgrnbrg@gmail.com>', // sender address
+});
+
+
+
+console.log("Message sent: %s", info.messageId);
+
+// console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+}
+
+async function sendEmailToProjectOwner(title, firstName,email, amount) {
+  const output = `
+  <p>Hello, ${firstName} </p>
+  <p>You have recieved GHS ${amount} for your project ${title}.</p>
+  <p>Thank You!</p>
+  
+`
+// console.log(process.env.EMAIL)
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD
+  },
+  tls: {
+    rejectUnauthorized:false
+  }
+});
+
+
+
+
+let info = await transporter.sendMail({
+  to: email, // list of receivers
+  subject: "Project Account Credited.", // Subject line
+  text: "Hello world?", // plain text body
+  html: output, // html body
+  from: '"MD Crowdfund Admin👻" <jmsgrnbrg@gmail.com>', // sender address
+});
+
+
+
+console.log("Message sent: %s", info.messageId);
+
+// console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+}
+
 module.exports = {
-  sendEMailToReviewer, sendEmailtoAdmin, sendApprovedMail, sendDeniedMail};
+  sendEMailToReviewer, 
+  sendEmailtoAdmin, 
+  sendApprovedMail, 
+  sendDeniedMail,
+  sendEmailToProjectOwner,
+  sendApprovedToProjectOwner
+};

@@ -6,13 +6,17 @@ const mongoose = require('mongoose')
 var passport = require('passport')
 var bodyParser = require('body-parser')
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
-var {sendEMailToReviewer, sendEmailtoAdmin, sendApprovedMail} = require ('../gmail-notification')
+
+const { ProjectCreatedMessage } = require('../notificatons')
+var { sendEmailtoAdmin} = require ('../gmail-notification')
 
 
 const Project = require('../models/Project')
 const User = require('../models/User')
 const AdminUser = require('../models/adminUser')
 const ProjectOwner = require('../models/projectOwner')
+
+const { authUser, authRole } = require('../basicAuth');
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/CrowdFunding')
@@ -23,35 +27,43 @@ mongoose.connect('mongodb://127.0.0.1:27017/CrowdFunding')
 var passport = require('passport');
 const bcrypt = require('bcrypt')
 
+const {check, validationResult } = require('express-validator')
+
 const uploadInitialStagePics = multer({dest:'public/images/initial_stage_pics'});
 const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
   
-  const ghanaProjects = await Project.find({country:"GHS"});
-  const burkinaProjects = await Project.find({country:"BKF"});
-
-  res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects});
-});
-
-
-router.get('/', async function(req, res, next) {
-  
   const ghanaProjects = await Project.find({country:"GHS", status:"Active"});
   const burkinaProjects = await Project.find({country:"BKF", status:"Active"});
 
-  res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects});
+  res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects, user: req.user});
 });
 
 
+// router.get('/', async function(req, res, next) {
+  
+//   const ghanaProjects = await Project.find({country:"GHS", status:"Active"});
+//   const burkinaProjects = await Project.find({country:"BKF", status:"Active"});
+
+//   res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects});
+// });
 
 
-router.get('/create-project', (req,res)=>{
-  if (req.user) {
-    res.render('multi');
-  } 
-  res.redirect('/user-login');
+
+
+// router.get('/create-project', (req,res)=>{
+//   if (req.user) {
+//     res.render('multi');
+//   } 
+//   res.redirect('/user-login');
+// })
+
+router.get('/create-project', authUser,authRole('project-owner'), (req,res)=>{
+  console.log(req.user)
+  res.render('multi', {user: req.user});
+  
 })
 
 router.get('/user-login', (req,res)=>{
@@ -79,7 +91,7 @@ router.get('/project-page', (req,res)=>{
 // })
 router.get('/view-project/:id', async (req,res)=>{
   const project = await Project.findById(req.params.id)
-  res.render('view-project', {project:project})
+  res.render('view-project', {project:project, user: req.user})
 });
 
 const cpUpload = uploadInitialStagePics.fields([{ name: 'initialStageImgs', maxCount: 3 }, { name: 'finalStageImgs', maxCount: 3 }])
@@ -116,8 +128,12 @@ router.post('/processProjectUpload', cpUpload, urlencodedParser, async (req, res
 
   }
 
+  let signedPO = req.user;
+  let poID = signedPO.email;
+
 
   const project = new Project({
+    projectOwner: poID,
     title : req.body.projectTitle,
     description : req.body.projectDescription,
     location : req.body.projectLocation,
@@ -139,7 +155,7 @@ router.post('/processProjectUpload', cpUpload, urlencodedParser, async (req, res
   await project.save();
 
 // =======gmail notification===============
-
+  ProjectCreatedMessage()
   sendEmailtoAdmin(req.body.projectParticipants, req.body.projectTitle, req.body.projectLocation)
 
   res.redirect('/')
@@ -185,7 +201,7 @@ router.post('/addme', async (req,res, next)=>{
 })
 
 router.get('/login', (req,res)=>{
-  res.render('login2')
+  res.render('login2', {user: req.user})
 })
 
 router.get('/login2', (req,res)=>{
@@ -198,24 +214,26 @@ router.post('/loginUsers', async (req,res, next)=>{
   let projectOwner = await ProjectOwner.findOne({ email: req.body.email })
   let userAdmin = await AdminUser.findOne({ email: req.body.email })
 
+  if (userAdmin) {
+    const validPassword = await bcrypt.compare(req.body.password, userAdmin.password)
+    if (!validPassword) return res.status(400).send("Invalid email or password.")
+
+    res.cookie('userEmail', req.body.email)
+
+    return res.redirect(`/${userAdmin.role}`)
+  }  
+  
   if (projectOwner) {
     const poValidPassword = await bcrypt.compare(req.body.password, projectOwner.password)
     if (!poValidPassword) return res.status(400).send("Invalid email or password.")
 
     res.cookie('userEmail', req.body.email)
 
-    res.redirect('/')
+    return res.redirect('/create-project')
   } 
-  else if (userAdmin) {
-    const validPassword = await bcrypt.compare(req.body.password, userAdmin.password)
-    if (!validPassword) return res.status(400).send("Invalid email or password.")
 
-    res.cookie('userEmail', req.body.email)
-
-    res.redirect(`/${userAdmin.role}`)
-  } else {
-    return res.status(400).send("Invalid email or password.")
-  }
+  return res.status(400).send("Invalid email or password.")
+  
   
   
 
@@ -304,12 +322,38 @@ router.get('/google/callback',
     res.send('Successful user login ')
   })
 
-router.post('/processProjectOwnerRegister', async (req, res) => {
+router.post('/processProjectOwnerRegister', [
+  
+  
+  check('email', 'Email is not valid.')
+    .isEmail()
+    .normalizeEmail(),
+  check('password1', 'This password must be 3+ characters long.')
+    .exists()
+    .isLength({ min:3 }),
+    
+  check('password1').custom((value, { req }) => {
+    if (value !== req.body.password2){
+      
+      throw new Error('Passwords do not match..')
+    } else {
+      return true;
+    }
+
+  })
+], async (req, res) => {
 
     let projectOwner = await ProjectOwner.findOne({ email: req.body.email })
     if (projectOwner) return res.status(400).send("User already registered.")
   
     const salt = await bcrypt.genSalt(10);
+    
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()){
+      const alert = errors.array();
+      return res.render('user-register', {alert})
+    }
   
     if(req.body.password1 === req.body.password2){
   
@@ -323,7 +367,7 @@ router.post('/processProjectOwnerRegister', async (req, res) => {
         password : await bcrypt.hash(req.body.password1, salt),   
       }).save()
       .then( item =>{
-        res.redirect('/user-login')
+        res.redirect('/login')
       }).catch(error=>{
         res.status(400).send('unable to save in database')
       })

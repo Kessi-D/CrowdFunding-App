@@ -1,5 +1,12 @@
-<%- include("navbar") %> 
-    <title>Login</title>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Heroes · Bootstrap v5.1</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/heroes/">
 
@@ -54,24 +61,97 @@
     
 <main>
 
-  <div class="col-md-4 mx-auto col-lg-3 mt-5">
-    <form class="p-4 p-md-5 border rounded-3 bg-light" action="/loginUsers" method="post">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+          <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+            <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+          </a>
+    
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            <li><a href="#" class="nav-link px-2 link-secondary">Overview</a></li>
+            <li><a href="/admin/register" class="nav-link px-2 link-dark">Create Admins</a></li>
+          </ul>
+    
+          <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+            <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+          </form>
+    
+          <div class="dropdown text-end">
+            <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+            </a>
+            <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+              <li><a class="dropdown-item" href="#">New project...</a></li>
+              <li><a class="dropdown-item" href="#">Settings</a></li>
+              <li><a class="dropdown-item" href="#">Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Sign out</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+  <br><br>
+
+  <div class="col-md-4 mx-auto col-lg-3">
+    <form class="p-4 p-md-5 border rounded-3 bg-light" action="/processProjectOwnerRegister" method="post">
+
+      <% if (typeof alert != 'undefined') { %>
+        <% alert.forEach(function(error) { %>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <%= error.msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+        <% }) %>
+    <% } %>
+    
       <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email">
+        <input type="text" class="form-control" id="floatingInput" name="firstName" required>
+        <label for="floatingInput">First Name</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="floatingInput" name="lastName" required>
+        <label for="floatingInput">Last Name</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="floatingInput" name="email" required>
         <label for="floatingInput">Email address</label>
       </div>
+
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
+        <input type="text" class="form-control" id="floatingInput" name="address" required>
+        <label for="floatingInput">Address</label>
+      </div>
+
+
+      <div class="form-floating mb-3">
+        
+        <select class="form-select" aria-label="Default select example" name="country" required>
+            <option value="GHS">Ghana</option>
+            <option value="GHS">Burkina Faso</option>
+        </select>
+        <label for="exampleFormControlInput1" class="form-label">Country</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        
+        <select class="form-select" aria-label="Default select example" name="role" required>
+            <option value="project-owner">Project Owner</option>
+        </select>
+        <label for="exampleFormControlInput1" class="form-label">Role</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="floatingPassword" name="password1" required>
         <label for="floatingPassword">Password</label>
       </div>
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="floatingPassword" name="password2" required>
+        <label for="floatingPassword">Confirm Password</label>
       </div>
-      <button class="w-100 btn btn-lg btn-primary" type="submit">Sign In</button>
+
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Register Person</button>
       <hr class="my-4">
-      <small class="text-muted">By clicking Sign up, you agree to the terms of use.</small>
+      <small class="text-muted">Have an account? <a href="/user-login">Log In</a></small>
     </form>
   </div>
 
@@ -83,4 +163,6 @@
 
       
   </body>
-  <%- include("footer") %> 
+</html>
+
+

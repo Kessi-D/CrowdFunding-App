@@ -5,6 +5,11 @@ mongoose.connect('mongodb://127.0.0.1:27017/CrowdFunding')
 .catch(err=>console.error('Could not connect to the MongoDB...', err))
 
 const projectSchema = new mongoose.Schema({
+
+    projectOwner : {
+      type:String,
+      trim:true,
+    },
     title : {
       type:String,
       trim:true,

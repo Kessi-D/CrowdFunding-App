@@ -27,6 +27,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/CrowdFunding')
 var passport = require('passport');
 const bcrypt = require('bcrypt')
 
+const {check, validationResult } = require('express-validator')
+
 const uploadInitialStagePics = multer({dest:'public/images/initial_stage_pics'});
 const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 
@@ -212,24 +214,26 @@ router.post('/loginUsers', async (req,res, next)=>{
   let projectOwner = await ProjectOwner.findOne({ email: req.body.email })
   let userAdmin = await AdminUser.findOne({ email: req.body.email })
 
+  if (userAdmin) {
+    const validPassword = await bcrypt.compare(req.body.password, userAdmin.password)
+    if (!validPassword) return res.status(400).send("Invalid email or password.")
+
+    res.cookie('userEmail', req.body.email)
+
+    return res.redirect(`/${userAdmin.role}`)
+  }  
+  
   if (projectOwner) {
     const poValidPassword = await bcrypt.compare(req.body.password, projectOwner.password)
     if (!poValidPassword) return res.status(400).send("Invalid email or password.")
 
     res.cookie('userEmail', req.body.email)
 
-    res.redirect('/create-project')
+    return res.redirect('/create-project')
   } 
-  else if (userAdmin) {
-    const validPassword = await bcrypt.compare(req.body.password, userAdmin.password)
-    if (!validPassword) return res.status(400).send("Invalid email or password.")
 
-    res.cookie('userEmail', req.body.email)
-
-    res.redirect(`/${userAdmin.role}`)
-  } else {
-    return res.status(400).send("Invalid email or password.")
-  }
+  return res.status(400).send("Invalid email or password.")
+  
   
   
 
@@ -318,12 +322,38 @@ router.get('/google/callback',
     res.send('Successful user login ')
   })
 
-router.post('/processProjectOwnerRegister', async (req, res) => {
+router.post('/processProjectOwnerRegister', [
+  
+  
+  check('email', 'Email is not valid.')
+    .isEmail()
+    .normalizeEmail(),
+  check('password1', 'This password must be 3+ characters long.')
+    .exists()
+    .isLength({ min:3 }),
+    
+  check('password1').custom((value, { req }) => {
+    if (value !== req.body.password2){
+      
+      throw new Error('Passwords do not match..')
+    } else {
+      return true;
+    }
+
+  })
+], async (req, res) => {
 
     let projectOwner = await ProjectOwner.findOne({ email: req.body.email })
     if (projectOwner) return res.status(400).send("User already registered.")
   
     const salt = await bcrypt.genSalt(10);
+    
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()){
+      const alert = errors.array();
+      return res.render('user-register', {alert})
+    }
   
     if(req.body.password1 === req.body.password2){
   

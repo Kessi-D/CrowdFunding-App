@@ -33,6 +33,7 @@ const projectOwnerSchema = new mongoose.Schema ({
     role: {
         type:String,
         trim: true,
+        default: "project owner"
     },
     password : {
         type:String,

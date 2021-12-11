@@ -158,6 +158,8 @@
           <form method="post" action="/financial/processDonations"  style="background-color:cornsilk; padding: 10px; width: 100%;">
             <h4>Donations Recieved</h4>
             <input type="text" value="<%= project._id %>" name="projectID">
+            <input type="text" value="<%= projectOwner.email %>" name="projectOwner">
+            
             <label for="">Enter Total Amount recieved for the project</label>
             <input type="number" name="donationsRecieved">
             <button type="submit" class="btn btn-success">Update Financial Status</button>

@@ -9,7 +9,7 @@ function authUser(req,res,next){
 function authRole(role){
     return (req,res,next) => {
 
-        if (req.user[0].role !== role){
+        if (req.user.role !== role){
             res.status(401)
             return res.send('Not allowed!')
         }

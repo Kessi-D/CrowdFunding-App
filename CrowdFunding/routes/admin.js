@@ -6,41 +6,25 @@ const bcrypt = require('bcrypt')
 var bodyParser = require('body-parser')
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-var {sendEMailToReviewer, sendEmailtoAdmin} = require ('../gmail-notification')
-=======
-var {sendEMailToReviewer} = require ('../gmail-notification')
-
-var {sendEMailToReviewer} = require ('../gmail-notification')
+const { AdminCreatedMessage, ProjectApprovedMessage } = require('../notificatons')
+var {sendEMailToReviewer, sendApprovedToProjectOwner} = require ('../gmail-notification')
 
 
 
 const Project = require('../models/Project')
 const AdminUser = require('../models/adminUser')
-const User = require('../models/User')
+const ProjectOwner = require('../models/projectOwner')
 
 const uploadInitialStagePics = multer({dest:'public/images/initial_stage_pics'});
 const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 
 /* GET home page. */
-router.get('/projects', async function(req, res, next) {
-  const projectsFromVistors = await Project.find({ status: "inactive" })
-  
-  
 
-  res.render('admin-index', { title: 'Express', projectsFromVistors:projectsFromVistors, userEmail: req.cookies.userEmail});
-});
-
-// ==========render reviewed pages===================
-router.get('/reviewed', async (req, res, next)=>{
-  const projectsFromReviewers = await Project.find({ status: "reviewed"})
-  const deniedProject = await Project.find({ status: "denied"})
-  res.render('reviewed-page', {title: 'Reviewed', projectsFromReviewers:projectsFromReviewers, deniedProject:deniedProject, userEmail: req.cookies.userEmail})
-})
 // ===============render admin home page=============
 router.get('/', async function(req, res, next) {
-  const totalUsers = await User.find().count()
+  const totalProjectOwners = await ProjectOwner.find().count()
   const adminUsers = await AdminUser.find().count()
-  const countTotalUsers = totalUsers + adminUsers
+  const countTotalUsers = totalProjectOwners + adminUsers
   const countProjects = await Project.find().count()
 
 
@@ -50,7 +34,7 @@ router.get('/', async function(req, res, next) {
   let reviewedProjects = await Project.find({status:"reviewed"} || {status:"denied"})
   reviewedProjects = reviewedProjects.slice(0,5)
 
-  res.render('admin-dashboard', { countProjects: countProjects, countTotalUsers: countTotalUsers, projects:projects, reviewedProjects:reviewedProjects})
+  res.render('admin-dashboard', { countProjects: countProjects, countTotalUsers: countTotalUsers, projects:projects, reviewedProjects:reviewedProjects, user: req.user})
 });
 
 // =======================================================
@@ -143,7 +127,12 @@ router.get('/delete-project/:id', async (req, res) => {
 
 router.post('/uploadOnline', async (req, res) => {
   const project = await Project.findById(req.body.projectID);
-  
+  const projectOwner = await ProjectOwner.findById(project.projectOwner);
+
+  ProjectApprovedMessage();
+
+  sendApprovedToProjectOwner( project.title , projectOwner.firstname, projectOwner.email);
+
   const UploadProject = await Project.findByIdAndUpdate(req.body.projectID, {
     status : "Active",
   }, {new:true});
@@ -176,12 +165,6 @@ router.get('/delete-project/:id', async (req, res) => {
  })
 
 router.post('/processAdminRegister', async (req, res) => {
-  console.log(req.body.firstName)
-  console.log(req.body.lastName)
-  console.log(req.body.email)
-  console.log(req.body.role)
-  console.log(req.body.password1)
-  console.log(req.body.password2)
 
   let userAdmin = await AdminUser.findOne({ email: req.body.email })
   if (userAdmin) return res.status(400).send("User already registered.")
@@ -198,7 +181,8 @@ router.post('/processAdminRegister', async (req, res) => {
       password : await bcrypt.hash(req.body.password1, salt),   
     }).save()
     .then( item =>{
-      res.redirect('/admin')
+      AdminCreatedMessage();
+      res.redirect('/admin/users')
     }).catch(error=>{
       res.status(400).send('unable to save in database')
     })
@@ -216,7 +200,9 @@ router.get('/logout', async (req, res) => {
 
 router.get('/users', async (req, res) => {
   const adminUsers = await AdminUser.find()
-  const productOwners = await User.find();
+  const productOwners = await ProjectOwner.find()
+
+  console.log(productOwners)
 
   res.render('admin-users', { title: 'Express', adminUsers:adminUsers, productOwners:productOwners, userEmail: req.cookies.userEmail })
 });
@@ -233,6 +219,19 @@ router.post('/processSendToReviewer', urlencodedParser, async (req,res)=>{
   
   res.redirect('/admin/projects')
 });
+
+router.get('/projects', async function(req, res, next) {
+  const projectsFromVistors = await Project.find({ status: "inactive" })
+
+  res.render('admin-index', { title: 'Express', projectsFromVistors:projectsFromVistors, userEmail: req.cookies.userEmail});
+});
+
+// ==========render reviewed pages===================
+router.get('/reviewed', async (req, res, next)=>{
+  const projectsFromReviewers = await Project.find({ status: "reviewed"})
+  const deniedProject = await Project.find({ status: "denied"})
+  res.render('reviewed-page', {title: 'Reviewed', projectsFromReviewers:projectsFromReviewers, deniedProject:deniedProject, userEmail: req.cookies.userEmail})
+})
 
 
 module.exports = router;

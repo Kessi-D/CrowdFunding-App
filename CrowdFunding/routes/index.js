@@ -251,7 +251,7 @@ router.post('/loginUsers', async (req,res, next)=>{
 })
 
 router.get('/logout', async (req, res) => {
-  res.clearCookie('userEmail')
+  res.clearCookie()
   res.redirect('/')
 });
 

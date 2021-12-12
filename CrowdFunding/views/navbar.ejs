@@ -47,11 +47,14 @@
           
 
         <% if (!user) { %>
+          
           <li class="nav-item">
             <a href="/login" class="nav-link">Login</a>
           </li>  
         <% } else { %>
+
           <li class="nav-item">
+            <%= user.username %>
             <a href="/logout" class="nav-link">Logout</a>
           </li> 
         <% } %>

@@ -19,10 +19,11 @@ router.get('/', async function(req, res, next) {
 
 router.get('/view-project/:id', async (req, res) => {
   const project = await Project.findById(req.params.id)
+  console.log(project)
 
   const projectOwner = await ProjectOwner.findById(project.projectOwner)
 
-  res.render('financial-view-project', { title: 'Express', project:project, projectOwner:projectOwner });
+  res.render('financial-view-project', { title: 'Express', project:project, projectOwner:projectOwner, userEmail: req.cookies.userEmail });
 });
 
 

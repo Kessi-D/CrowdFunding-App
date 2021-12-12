@@ -260,11 +260,21 @@ router.get('/logout', async (req, res) => {
 router.get('/git', passport.authenticate('github'))
 
 
-router.get('/auth/git', passport.authenticate('github', {session: false}), (req, res)=>{
-  res.render('p-o-page')
+router.get('/auth/git', passport.authenticate('github', {failureRedirect: '/loginFailed'}), (req,res)=>{
+  console.log("User info (please!!!)")
+  console.log(req.user)
+  res.redirect('/')
+})
+
+router.get('/a', (req,res)=>{
+  console.log(req.user.username)
+  res.send(req.user.username)
 })
 
 
+router.get('/loginFailed', (req,res)=>{
+  res.send('passport failed main')
+})
 // =======================passport fb ================
 router.get('/auth/facebook',
   passport.authenticate('facebook'));

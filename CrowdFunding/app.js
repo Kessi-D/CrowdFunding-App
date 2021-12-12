@@ -2,9 +2,10 @@ var createError = require('http-errors')
 var express = require('express')
 var path = require('path')
 var cookieParser = require('cookie-parser')
-var session = require('express-session')
+
 var logger = require('morgan')
 var router = require('./routes/index')
+var session = require('express-session')
 var passport = require('passport')
 require('dotenv').config()
 var {config, fbConfig, google} = require('./passport.js')
@@ -27,6 +28,15 @@ const ProjectOwner = require('./models/projectOwner')
 const { authUser, authRole } = require('./basicAuth');
 
 var app = express();
+
+app.use(session({
+  secret: 'I love Express!',
+  resave: false,
+  saveUninitialized: true,
+}))
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -53,14 +63,19 @@ app.use('/reviewer', authUser, authRole('reviewer'), reviewerRouter)
 app.use('/financial',authUser, authRole('financial'), financialRouter)
 
 
-app.use(passport.initialize())
-app.use(passport.session())
+passport.use(new GitHubStrategy(config,
+  function(accessToken, refreshToken, profile, cb) {
+    // console.log(profile);
+    return cb(null, profile)
+  }
+));
+passport.serializeUser((user, cb)=>{
+  cb(null, user)
+})
+passport.deserializeUser((user, cb)=>{
+  cb(null, user)
+})
 
-app.use(session({
-  resave: false,
-  saveUninitialized: true,
-  secret: 'crowdfund'
-}));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -95,27 +110,7 @@ passport.use(new GoogleStrategy(google,
   }
 ));
 // ========================github auth=======================
-passport.use(new GitHubStrategy.Strategy(config,
-  function(accessToken, refreshToken, profile, cb) {
-  console.log(profile)
-  
-  // const retrievedData = profile.findOne()
-  return cb(null, profile);
 
-
-}
-));
-
-
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-  User.findById(id, function(err, user) {
-    done(err, user);  
-  });
-});
 
 async function setUser(req,res,next){
 

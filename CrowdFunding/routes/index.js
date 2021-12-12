@@ -129,7 +129,7 @@ router.post('/processProjectUpload', cpUpload, urlencodedParser, async (req, res
   }
 
   let signedPO = req.user;
-  let poID = signedPO.email;
+  let poID = signedPO._id;
 
 
   const project = new Project({

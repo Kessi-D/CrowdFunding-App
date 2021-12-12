@@ -30,7 +30,7 @@ router.get('/', async function(req, res, next) {
 
 router.get('/view-project/:id', async (req, res) => {
   const project = await Project.findById(req.params.id)
-  res.render('reviewer-view-project', { title: 'Express', project:project });
+  res.render('reviewer-view-project', { title: 'Express', project:project, userEmail: req.cookies.userEmail });
 });
 
 // router.get('/edit-project/:id', async (req, res) => {

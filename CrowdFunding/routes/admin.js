@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt')
 var bodyParser = require('body-parser')
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-const { AdminCreatedMessage, ProjectApprovedMessage } = require('../notificatons')
+const { AdminCreatedMessage, ProjectApprovedMessage, AdminToReviewerMessage } = require('../notificatons')
 var {sendEMailToReviewer, sendApprovedToProjectOwner} = require ('../gmail-notification')
 
 
@@ -49,8 +49,10 @@ router.get('/view-project/:id', async (req, res) => {
   const project = await Project.findById(req.params.id)
   const reviewers = await AdminUser.find({role: "reviewer"})
 
-  if (project.status === "reviewed") res.render('admin-view-project-reviewed', { title: 'Express', project:project });
-  if (project.status === "denied") res.render ('denied-project-reviewed', {title: 'Express', project:project })
+  const projectOwner = await ProjectOwner.findById(project.projectOwner)
+
+  if (project.status === "reviewed") return res.render('admin-view-project-reviewed', { title: 'Express', project:project, userEmail: req.cookies.userEmail });
+  if (project.status === "denied") return res.render ('denied-project-reviewed', {title: 'Express', project:project, userEmail: req.cookies.userEmail, projectOwner:projectOwner })
   res.render('admin-view-project', { title: 'Express', project:project, reviewers:reviewers, userEmail: req.cookies.userEmail });
 });
 
@@ -61,7 +63,7 @@ router.get('/register', async (req, res) => {
 
 router.get('/edit-project/:id', async (req, res) => {
   const project = await Project.findById(req.params.id)
-  res.render('admin-edit-project', { title: 'Express', project:project });
+  res.render('admin-edit-project', { title: 'Express', project:project , userEmail: req.cookies.userEmail});
 });
 
 // i dont understand something here
@@ -143,7 +145,7 @@ router.post('/uploadOnline', async (req, res) => {
     status : "Active",
   }, {new:true});
 
-  res.redirect('/admin/projects')
+  res.redirect('/admin/reviewed')
 });
 
 router.get('/delete-project/:id', async (req, res) => {
@@ -241,6 +243,8 @@ router.post('/processSendToReviewer', urlencodedParser, async (req,res)=>{
     reviewer: req.body.reviewer,
     status : "review",
   }, {new:true});
+
+  AdminToReviewerMessage();
 
   sendEMailToReviewer(req.body.reviewer) 
   

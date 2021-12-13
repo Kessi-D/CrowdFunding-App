@@ -18,6 +18,15 @@ function AdminCreatedMessage() {
     })
 }
 
+function AdminToReviewerMessage() {
+    notifier.notify('Message');
+
+    notifier.notify({
+        title:"A project sent to a Reviewer",
+        message: " A project is sent to a Reviewer to review."
+    })
+}
+
 
 function ReviewerToAdminMessage() {
     notifier.notify('Message');
@@ -51,5 +60,6 @@ module.exports = {
     AdminCreatedMessage, 
     ReviewerToAdminMessage, 
     FinancialStatusMessage,
-    ProjectApprovedMessage
+    ProjectApprovedMessage,
+    AdminToReviewerMessage
 };

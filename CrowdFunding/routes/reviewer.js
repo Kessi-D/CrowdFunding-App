@@ -17,14 +17,15 @@ var {sendApprovedMail, sendDeniedMail} = require ('../gmail-notification')
 /* GET home page. */
 router.get('/', async function(req, res, next) {
   let projects;
-
+  let signedUser;
   console.log(req.user)
   if (req.user){
-    let signedUser = req.user;
+    signedUser = req.user;
     projects = await Project.find({ status: "review", reviewer : signedUser.email })
   }
   
-  projects = await Project.find({ status: "review" })
+  projects = await Project.find({ status: "review", reviewer : signedUser.email })
+
   res.render('reviewer-index', { title: 'Reviewer', projects:projects, userEmail: req.cookies.userEmail });
 });
 

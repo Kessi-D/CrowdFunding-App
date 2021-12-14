@@ -5,7 +5,7 @@ const connection = mongoose.connect('mongodb://127.0.0.1:27017/CrowdFunding')
 .catch(()=>{console.log('Could not connect to mongoDB')})
 
 const roleSchema = new mongoose.Schema({
-    role: {
+    name: {
        type: String,
        required: true,
     }

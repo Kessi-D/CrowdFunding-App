@@ -15,6 +15,7 @@ const Project = require('../models/Project')
 const User = require('../models/User')
 const AdminUser = require('../models/adminUser')
 const ProjectOwner = require('../models/projectOwner')
+const Country = require('../models/Country')
 
 const { authUser, authRole } = require('../basicAuth');
 
@@ -32,6 +33,14 @@ const {check, validationResult } = require('express-validator')
 const uploadInitialStagePics = multer({dest:'public/images/initial_stage_pics'});
 const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 
+
+
+
+
+
+
+
+
 /* GET home page. */
 router.get('/', async function(req, res, next) {
   
@@ -41,6 +50,16 @@ router.get('/', async function(req, res, next) {
   res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects, user: req.user});
 });
 
+// router.get('/', async function(req, res, next) {
+//   const role = new Role({
+//     name: "Admin"
+//   }).save()
+//   .then( item => {
+//     res.send('role saved')
+//   }).catch(error=>{
+//     res.status(400).send('unable to save in database')
+//   })
+// });
 
 // router.get('/', async function(req, res, next) {
   
@@ -60,9 +79,10 @@ router.get('/', async function(req, res, next) {
 //   res.redirect('/user-login');
 // })
 
-router.get('/create-project', authUser,authRole('project-owner'), (req,res)=>{
-  console.log(req.user)
-  res.render('multi', {user: req.user});
+router.get('/create-project', authUser,authRole('project-owner'), async (req,res)=>{
+  const countries = await Country.find()
+  // console.log(req.user)
+  res.render('multi', {user: req.cookies.userEmail});
   
 })
 
@@ -72,7 +92,8 @@ router.get('/user-login', (req,res)=>{
 
 
 router.get('/user-signup', (req,res)=>{
-  res.render('user-register');
+  console.log(req.cookies.userEmail)
+  res.render('user-register', {user: req.cookies.userEmail});
 })
 
 
@@ -267,8 +288,7 @@ router.get('/auth/git', passport.authenticate('github', {failureRedirect: '/logi
 })
 
 router.get('/a', (req,res)=>{
-  console.log(req.user.username)
-  res.send(req.user.username)
+  res.render('a');
 })
 
 
@@ -386,6 +406,7 @@ router.post('/processProjectOwnerRegister', [
       return res.send("Passwords are not the same")
     }
 });
+
 
 
 

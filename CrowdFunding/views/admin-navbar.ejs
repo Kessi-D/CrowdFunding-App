@@ -38,7 +38,9 @@
 		<div class="px-3 py-2 bg-dark text-white">
 		  <div class="container">
 			<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-				<a class="navbar-brand" href="/"><img src="https://library.maximnyansa.com/static/media/maxim_logo.f94113f2.png" alt=""></a>
+				<div style="background-color: transparent;">
+					<a class="navbar-brand" href="/"><img src="https://library.maximnyansa.com/static/media/maxim_logo.f94113f2.png" alt=""></a>
+				</div>
 			  <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
 			  </a>
 	
@@ -80,6 +82,20 @@
 					Users
 				  </a>
 				</li>
+
+				<li>
+					<a href="/admin/role" class="nav-link text-white">
+					  <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#people-circle"/></svg>
+					   role
+					</a>
+				</li>
+
+				  <li>
+					<a href="/admin/country" class="nav-link text-white">
+					  <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="#people-circle"/></svg>
+					  Country
+					</a>
+				  </li>
 			  </ul>
 			  <div class="text-end">
 				  <small>Hello, <%= userEmail %></small>

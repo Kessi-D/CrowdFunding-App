@@ -251,11 +251,51 @@ console.log("Message sent: %s", info.messageId);
 
 }
 
+
+async function sendFullyFundedEmailToProjectOwner(title, firstName,email, amount) {
+  const output = `
+  <p>Hello, ${firstName} </p>
+  <p>HURRAY!!! Your project has been fully funded.</p>
+  <p>Thank You!</p>
+  
+`
+// console.log(process.env.EMAIL)
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.PASSWORD
+  },
+  tls: {
+    rejectUnauthorized:false
+  }
+});
+
+
+
+
+let info = await transporter.sendMail({
+  to: email, // list of receivers
+  subject: "Project FULLY FUNDED.", // Subject line
+  text: "Hello world?", // plain text body
+  html: output, // html body
+  from: '"MD Crowdfund Admin👻" <jmsgrnbrg@gmail.com>', // sender address
+});
+
+
+
+console.log("Message sent: %s", info.messageId);
+
+// console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+}
+
 module.exports = {
   sendEMailToReviewer, 
   sendEmailtoAdmin, 
   sendApprovedMail, 
   sendDeniedMail,
   sendEmailToProjectOwner,
-  sendApprovedToProjectOwner
+  sendApprovedToProjectOwner,
+  sendFullyFundedEmailToProjectOwner
 };

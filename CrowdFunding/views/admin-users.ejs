@@ -33,12 +33,12 @@
                   </tr>
                 <% } %>
     
-                <% for (var i=0; i< productOwners.length; i++) { %>
+                <% for (var j=0; j< productOwners.length; i++) { %>
                   <tr>
-                    <td><%= productOwners[i]._id %></td>
-                    <td><%= productOwners[i].firstname %></td>
-                    <td><%= productOwners[i].lastname %></td>
-                    <td><%= productOwners[i].email %></td>
+                    <td><%= productOwners[j]._id %></td>
+                    <td><%= productOwners[j].firstname %></td>
+                    <td><%= productOwners[j].lastname %></td>
+                    <td><%= productOwners[j].email %></td>
                     <td>Product Owner</td>
                     <td>
                       <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal1">

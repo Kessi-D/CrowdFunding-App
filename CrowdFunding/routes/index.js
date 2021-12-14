@@ -35,12 +35,6 @@ const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 
 
 
-
-
-
-
-
-
 /* GET home page. */
 router.get('/', async function(req, res, next) {
   
@@ -256,7 +250,7 @@ router.post('/loginUsers', async (req,res, next)=>{
   return res.status(400).send("Invalid email or password.")
   
   
-  
+
 
   
 
@@ -355,12 +349,16 @@ router.get('/google/callback',
 router.post('/processProjectOwnerRegister', [
   
   
-  check('email', 'Email is not valid.')
-    .isEmail()
-    .normalizeEmail(),
-  check('password1', 'This password must be 3+ characters long.')
-    .exists()
-    .isLength({ min:3 }),
+  // check('email', 'Email is not valid.').isEmail().normalizeEmail(),
+  check('email', 'Email is not valid.').custom(async(value, { req }) => {
+
+    return await ProjectOwner.findOne({ email: req.body.email }).then(user => {
+      if (user) {
+        return Promise.reject('E-mail already in use');
+      }
+    });
+  }),
+  check('password1', 'This password must be 6+ characters long.').exists().isLength({ min:6 }),
     
   check('password1').custom((value, { req }) => {
     if (value !== req.body.password2){
@@ -373,8 +371,8 @@ router.post('/processProjectOwnerRegister', [
   })
 ], async (req, res) => {
 
-    let projectOwner = await ProjectOwner.findOne({ email: req.body.email })
-    if (projectOwner) return res.status(400).send("User already registered.")
+    // let projectOwner = await ProjectOwner.findOne({ email: req.body.email })
+    // if (projectOwner) return res.status(400).send("User already registered.")
   
     const salt = await bcrypt.genSalt(10);
     
@@ -382,7 +380,7 @@ router.post('/processProjectOwnerRegister', [
 
     if (!errors.isEmpty()){
       const alert = errors.array();
-      return res.render('user-register', {alert})
+      return res.render('user-register', {alert, user: req.cookies.userEmail})
     }
   
     if(req.body.password1 === req.body.password2){

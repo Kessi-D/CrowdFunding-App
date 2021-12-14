@@ -5,6 +5,7 @@
   crossorigin="anonymous"
 />
 
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="/"><img src="https://library.maximnyansa.com/static/media/maxim_logo.f94113f2.png" alt=""></a>
@@ -34,34 +35,22 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            Features
+            Routes
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="/admin">Admin</a></li>
             <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="dropdown-item" href="/reviewer">Reviewer</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li><a class="dropdown-item" href="/financial">Financial Admin</a></li>
+
           </ul>
         </li>
         
 
-        <% if (!user) { %>
-          
-          <li class="nav-item">
-            <a href="/login" class="nav-link">Login</a>
-          </li>  
-        <% } else { %>
-
-          <li class="nav-item">
-            <%= user.username %>
-            <a href="/logout" class="nav-link">Logout</a>
-          </li> 
-        <% } %>
-        <li class="nav-item">
-          <a class="nav-link" href="/register">Sign Up</a>
-        </li>
+    
       </ul>
-      <form class="d-flex">
+      <!-- <form class="d-flex">
         <input
           class="form-control me-2"
           type="search"
@@ -70,7 +59,20 @@
         />
         <button class="btn btn-outline-success" type="submit">Search</button>
         
-      </form>
+      </form> -->
+
+      
+
+      <% if (!user) { %>
+        <a type="button" href="/user-signup" class="btn btn-secondary" style="margin-right: 10px;">Sign Up</a>
+        <a type="button" href="/login" class="btn btn-success">Login</a>
+
+      <% } else { %>
+
+
+          <%= user.username %>
+          <a type="button" href="/logout" class="btn btn-danger">Logout</a>
+      <% } %>
     </div>
   </div>
 </nav>

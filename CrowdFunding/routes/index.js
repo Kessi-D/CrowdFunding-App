@@ -28,7 +28,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/CrowdFunding')
 var passport = require('passport');
 const bcrypt = require('bcrypt')
 
-const {check, validationResult } = require('express-validator')
+const {check, body, validationResult } = require('express-validator')
 
 const uploadInitialStagePics = multer({dest:'public/images/initial_stage_pics'});
 const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
@@ -36,14 +36,22 @@ const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
 
 
 /* GET home page. */
+// router.get('/', async function(req, res, next) {
+  
+//   const ghanaProjects = await Project.find({country:"GHS", status:"Active"});
+//   const burkinaProjects = await Project.find({country:"BKF", status:"Active"});
+
+//   res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects, user: req.user});
+// });
+
 router.get('/', async function(req, res, next) {
   
-  const ghanaProjects = await Project.find({country:"GHS", status:"Active"});
-  const burkinaProjects = await Project.find({country:"BKF", status:"Active"});
+  const a = await ProjectOwner.find();
+  const b = await AdminUser.find();
+  const c = a.concat(b)
+  res.json(c)
 
-  res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects, user: req.user});
 });
-
 // router.get('/', async function(req, res, next) {
 //   const role = new Role({
 //     name: "Admin"
@@ -57,10 +65,18 @@ router.get('/', async function(req, res, next) {
 
 // router.get('/', async function(req, res, next) {
   
-//   const ghanaProjects = await Project.find({country:"GHS", status:"Active"});
-//   const burkinaProjects = await Project.find({country:"BKF", status:"Active"});
+//   const a = await ProjectOwner.find()
+//   const b = await AdminUser.find()
 
-//   res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects});
+//   d = a.
+//   e = await d.find()
+//   console.log(e)
+//   // const c =  a.concat(b)
+  
+
+//   // console.log(c);
+
+//   // c.find
 // });
 
 
@@ -224,33 +240,60 @@ router.get('/login2', (req,res)=>{
 })
 
 
-router.post('/loginUsers', async (req,res, next)=>{
-
-  let projectOwner = await ProjectOwner.findOne({ email: req.body.email })
-  let userAdmin = await AdminUser.findOne({ email: req.body.email })
-
-  if (userAdmin) {
-    const validPassword = await bcrypt.compare(req.body.password, userAdmin.password)
-    if (!validPassword) return res.status(400).send("Invalid email or password.")
-
-    res.cookie('userEmail', req.body.email)
-
-    return res.redirect(`/${userAdmin.role}`)
-  }  
+router.post('/loginUsers',[
   
-  if (projectOwner) {
-    const poValidPassword = await bcrypt.compare(req.body.password, projectOwner.password)
-    if (!poValidPassword) return res.status(400).send("Invalid email or password.")
+  check('email').custom(async(value, { req }) => {
 
-    res.cookie('userEmail', req.body.email)
+    return await ProjectOwner.findOne({ email: req.body.email }).then(async user => {
+      if (!user) {
+         return Promise.reject('Invalid Credentials');
+      } 
+    });
+  }),
+  check('password', 'This password must be 6+ characters long.').isLength({ min:6 }),
+  check('password').custom(async(value, { req }) => {
+    
+    return await ProjectOwner.findOne({ email: req.body.email }).then(async user => {
+      const poValidPassword = await bcrypt.compare(req.body.password, user.password)
+      console.log(poValidPassword);
+      if (!poValidPassword) {
+         return Promise.reject('Password incorrect');
+      }
 
-    return res.redirect('/create-project')
-  } 
+    });
+  }),
+], async (req,res, next)=>{
 
-  return res.status(400).send("Invalid email or password.")
+  // let projectOwner = await ProjectOwner.findOne({ email: req.body.email })
+  // let userAdmin = await AdminUser.findOne({ email: req.body.email })
+
+  // if (userAdmin) {
+  //   const validPassword = await bcrypt.compare(req.body.password, userAdmin.password)
+  //   if (!validPassword) return res.status(400).send("Invalid email or password.")
+
+  //   res.cookie('userEmail', req.body.email)
+
+  //   return res.redirect(`/${userAdmin.role}`)
+  // }  
+  
+  // if (projectOwner) {
+  //   const poValidPassword = await bcrypt.compare(req.body.password, projectOwner.password)
+  //   if (!poValidPassword) return res.status(400).send("Invalid email or password.")
+
+  //   res.cookie('userEmail', req.body.email)
+
+  //   return res.redirect('/create-project')
+  // } 
+
+  // return res.status(400).send("Invalid email or password.")
+  const errors = validationResult(req);
+  if (!errors.isEmpty()){
+    const alert = errors.array();
+    return res.render('login2', {alert, user: req.cookies.userEmail})
+  }
   
   
-
+  // res.send('you logged in.')
 
   
 
@@ -263,6 +306,10 @@ router.post('/loginUsers', async (req,res, next)=>{
   // res.cookie('userEmail', req.body.email)
 
   // res.redirect(`/${userAdmin.role}`)
+
+  res.cookie('userEmail', req.body.email)
+
+  return res.redirect('/create-project')
 })
 
 router.get('/logout', async (req, res) => {

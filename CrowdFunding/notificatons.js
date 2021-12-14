@@ -55,11 +55,21 @@ function ProjectApprovedMessage() {
     })
 }
 
+function FullyFundedProjectMessage() {
+    notifier.notify('Message');
+
+    notifier.notify({
+        title:"Project fully funded",
+        message: "Hurray!!! This project has been fully funded."
+    })
+}
+
 module.exports = {
     ProjectCreatedMessage, 
     AdminCreatedMessage, 
     ReviewerToAdminMessage, 
     FinancialStatusMessage,
     ProjectApprovedMessage,
-    AdminToReviewerMessage
+    AdminToReviewerMessage,
+    FullyFundedProjectMessage
 };

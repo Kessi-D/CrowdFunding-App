@@ -14,6 +14,8 @@ var {sendEMailToReviewer, sendApprovedToProjectOwner} = require ('../gmail-notif
 const Project = require('../models/Project')
 const AdminUser = require('../models/adminUser')
 const ProjectOwner = require('../models/projectOwner')
+const Role = require('../models/Role')
+const Country = require('../models/Country')
 
 const {check, validationResult } = require('express-validator')
 
@@ -28,6 +30,8 @@ router.get('/', async function(req, res, next) {
   const adminUsers = await AdminUser.find().count()
   const countTotalUsers = totalProjectOwners + adminUsers
   const countProjects = await Project.find().count()
+  const countReviewedProjects = await Project.find({ status: "reviewed"}).count()
+  
 
 
   let projects = await Project.find()
@@ -36,7 +40,7 @@ router.get('/', async function(req, res, next) {
   let reviewedProjects = await Project.find({status:"reviewed"} || {status:"denied"})
   reviewedProjects = reviewedProjects.slice(0,5)
 
-  res.render('admin-dashboard', { countProjects: countProjects, countTotalUsers: countTotalUsers, projects:projects, reviewedProjects:reviewedProjects, user: req.user})
+  res.render('admin-dashboard', { countProjects: countProjects, countTotalUsers: countTotalUsers, projects:projects, reviewedProjects:reviewedProjects, countReviewedProjects: countReviewedProjects, user: req.user})
 });
 
 router.get('/projects', async function(req, res, next) {
@@ -57,6 +61,7 @@ router.get('/view-project/:id', async (req, res) => {
 });
 
 router.get('/register', async (req, res) => {
+  console.log(req.cookies.userEmail)
   res.render('admin-register', {title: 'Admin Register', userEmail: req.cookies.userEmail})
 });
 
@@ -124,6 +129,13 @@ router.post('/processAdminProjectEdit', cpUpload , async (req, res) => {
   
 });
 
+router.get('/users', async (req, res) => {
+  const adminUsers = await AdminUser.find()
+  const productOwners = await ProjectOwner.find()
+
+  res.render('admin-users', { title: 'Admin', adminUsers:adminUsers, productOwners:productOwners, user: req.cookies.userEmail, userEmail: req.cookies.userEmail })
+});
+
 router.get('/delete-project/:id', async (req, res) => {
   const project = await Project.findById(req.params.id)
 
@@ -161,7 +173,7 @@ router.get('/delete-project/:id', async (req, res) => {
   
    await productOwners.delete();
 
-   res.redirect('/admin/users')
+   res.redirect('/admin/')
  })
 
  router.get('/delete-admin-user/:id', async (req, res)=>{
@@ -172,35 +184,65 @@ router.get('/delete-project/:id', async (req, res) => {
 
  })
 
-router.post('/processAdminRegister', [
+// router.post('/processAdminRegister', [
   
-  check('email', 'Email is not valid.')
-    .isEmail()
-    .normalizeEmail(),
-  check('password1', 'This password must be 3+ characters long.')
-    .exists()
-    .isLength({ min:3 }),
-  check('password1').custom((value, { req }) => {
-    if (value !== req.body.password2){
-      throw new Error('Passwords do not match.')
-    } else {
-      return true;
-    }
+//   check('email', 'Email is not valid.')
+//     .isEmail()
+//     .normalizeEmail(),
+//   check('password1', 'This password must be 3+ characters long.')
+//     .exists()
+//     .isLength({ min:3 }),
+    
+//   check('password1').custom((value, { req }) => {
+//     if (value !== req.body.password2){
+      
+//       throw new Error('Passwords do not match..')
+//     } else {
+//       return true;
+//     }
 
-  })
-], async (req, res) => {
+//   })
+// ], async (req, res) => {
+
+//   let userAdmin = await AdminUser.findOne({ email: req.body.email })
+//   if (userAdmin) return res.status(400).send("User already registered.")
+
+//   const salt = await bcrypt.genSalt(10);
+
+//   const errors = validationResult(req);
+
+//     if (!errors.isEmpty()){
+//       const alert = errors.array();
+//       return res.render('admin-register', {alert})
+//     }
+
+//   if(req.body.password1 === req.body.password2){
+
+//     userAdmin = new AdminUser({
+//       firstname: req.body.firstName,
+//       lastname: req.body.lastName,
+//       email : req.body.email,
+//       role: req.body.role,
+//       password : await bcrypt.hash(req.body.password1, salt),   
+//     }).save()
+//     .then( item =>{
+//       AdminCreatedMessage();
+//       res.redirect('/admin/')
+//     }).catch(error=>{
+//       res.status(400).send('unable to save in database')
+//     })
+    
+//   } else {
+//     return res.send("Passwords are not the same")
+//   }
+// });
+
+router.post('/processAdminRegister',  async (req, res) => {
 
   let userAdmin = await AdminUser.findOne({ email: req.body.email })
   if (userAdmin) return res.status(400).send("User already registered.")
 
   const salt = await bcrypt.genSalt(10);
-
-  const errors = validationResult(req);
-
-    if (!errors.isEmpty()){
-      const alert = errors.array();
-      return res.render('admin-register', {alert})
-    }
 
   if(req.body.password1 === req.body.password2){
 
@@ -213,7 +255,7 @@ router.post('/processAdminRegister', [
     }).save()
     .then( item =>{
       AdminCreatedMessage();
-      res.redirect('/admin/users')
+      res.redirect('/admin/')
     }).catch(error=>{
       res.status(400).send('unable to save in database')
     })
@@ -229,12 +271,7 @@ router.get('/logout', async (req, res) => {
 });
 
 
-router.get('/users', async (req, res) => {
-  const adminUsers = await AdminUser.find()
-  const productOwners = await ProjectOwner.find()
 
-  res.render('admin-users', { title: 'Express', adminUsers:adminUsers, productOwners:productOwners, userEmail: req.cookies.userEmail })
-});
 
 
 router.post('/processSendToReviewer', urlencodedParser, async (req,res)=>{
@@ -258,6 +295,39 @@ router.get('/reviewed', async (req, res, next)=>{
   const projectsFromReviewers = await Project.find({ status: "reviewed"})
   const deniedProject = await Project.find({ status: "denied"})
   res.render('admin-reviewed-page', {title: 'Reviewed', projectsFromReviewers:projectsFromReviewers, deniedProject:deniedProject, userEmail: req.cookies.userEmail})
+})
+
+router.get('/role', async (req, res, next)=>{
+
+  res.render('admin-create-role', {title: 'Reviewed', user: req.cookies.userEmail})
+})
+
+router.post('/processRole', async (req,res)=>{
+  const role = new Role({
+    name : req.body.roleName
+  }).save()
+  .then( item =>{
+    res.redirect('/admin/projects')
+  }).catch(error=>{
+    res.status(400).send('unable to save in database')
+  })
+})
+
+router.get('/country', async (req, res, next)=>{
+  res.render('admin-create-country', {title: 'Reviewed', user: req.cookies.userEmail})
+})
+
+router.post('/processCountry', async (req,res)=>{
+  const country = new Country({
+    country_name: req.body.countryName,
+    country_code : req.body.countryCode,
+    currency : req.body.countryCurrency
+  }).save()
+  .then( item =>{
+    res.redirect('/admin/projects')
+  }).catch(error=>{
+    res.status(400).send('unable to save in database')
+  })
 })
 
 

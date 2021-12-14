@@ -84,9 +84,18 @@
 					<div class="p-4 mb-3 bg-light rounded">
 			
 					  <h4 class="fst-italic">Financial Administrator buttons</h4>
-			
-					  <progress id="file" max="<%= project.amountAsked %>" value="<%= project.moneyPledged %>"> <%= project.percentage %> </progress>
-					  <label for=""><%= project.percentage %>% </label>
+
+					  <% if (project.percentage >= 100) { %>
+						<div class="progress">
+						  <div class="progress-bar  bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+						</div>
+					  <% } else { %>
+					  
+						<div class="progress">
+						  <div class="progress-bar bg-success" role="progressbar" style="width: <%=ghanaProjects[i].percentage%>%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+						</div> 
+		
+					  <% } %>
 			
 					  <p class="mb-0">The amount recieved:  <%= project.moneyPledged %> GHS </p>
 					  <p class="mb-0">The Money asked: <%= project.amountAsked %> GHS   </p>
@@ -95,11 +104,12 @@
 			
 					  <form method="post" action="/financial/processDonations"  style="background-color:cornsilk; padding: 10px; width: 100%;">
 						<h4>Donations Recieved</h4>
-						<input type="text" value="<%= project._id %>" name="projectID">
-						<input type="text" value="<%= projectOwner.email %>" name="projectOwner">
+						<input type="text" value="<%= project._id %>" name="projectID" hidden>
+						<input type="text" value="<%= projectOwner.email %>" name="projectOwner" hidden>
+						<input type="text" value="<%= project.percentage %>" name="projectPercent" hidden>
 						
-						<label for="">Enter Total Amount recieved for the project</label>
-						<input type="number" name="donationsRecieved">
+						<label for="">Enter Total Amount recieved for the project</label> 
+						<input type="number" name="donationsRecieved"> <br> <br>
 						<button type="submit" class="btn btn-success">Update Financial Status</button>
 					  </form> <br>
 					

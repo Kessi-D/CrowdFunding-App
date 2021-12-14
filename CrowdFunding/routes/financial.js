@@ -6,8 +6,8 @@ const fs = require('fs')
 const Project = require('../models/Project')
 const ProjectOwner = require('../models/projectOwner')
 
-const { FinancialStatusMessage } = require('../notificatons')
-const { sendEmailToProjectOwner } = require('../gmail-notification')
+const { FinancialStatusMessage, FullyFundedProjectMessage } = require('../notificatons')
+const { sendEmailToProjectOwner, sendFullyFundedEmailToProjectOwner } = require('../gmail-notification')
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
@@ -80,11 +80,18 @@ router.post('/processDonations', async (req,res)=>{
   // // console.log(projectID)
   // // console.log(amountApproved)
 
-  FinancialStatusMessage();
-
+  
   const projectOwner = await ProjectOwner.findById(project.projectOwner)
 
-  sendEmailToProjectOwner(project.title, projectOwner.firstname, projectOwner.email, newMoneyPledged)
+  if (percentSum > 100){
+    FullyFundedProjectMessage();
+    sendFullyFundedEmailToProjectOwner(project.title, projectOwner.firstname, projectOwner.email, newMoneyPledged)
+  } else {
+    FinancialStatusMessage();
+    sendEmailToProjectOwner(project.title, projectOwner.firstname, projectOwner.email, newMoneyPledged)
+  }
+
+  
 
   const UpdateProjectMoneyRecieved = await Project.findByIdAndUpdate(projectID, {
     moneyPledged : sum,

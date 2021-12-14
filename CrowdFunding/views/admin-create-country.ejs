@@ -1,0 +1,28 @@
+<%- include("navbar") %>
+
+<div class="container"> <br>
+    <div class="row justify-content-md-center">
+        <div class="col-sm-4">
+            <form  method="post" action="/admin/processCountry">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Country Name</label>
+                    <input type="text" class="form-control" name="countryName" placeholder="Country Name...">
+                </div>
+
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Country Code</label>
+                    <input type="text" class="form-control" name="countryCode" placeholder="Country Code...">
+                </div>
+
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Country Currency</label>
+                    <input type="text" class="form-control" name="countryCurrency" placeholder="Country Currency...">
+                </div>
+
+                <button type="submit" class="btn btn-success">Create Country</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- include("footer") %>

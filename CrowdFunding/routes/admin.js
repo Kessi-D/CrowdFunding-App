@@ -133,7 +133,7 @@ router.get('/users', async (req, res) => {
   const adminUsers = await AdminUser.find()
   const productOwners = await ProjectOwner.find()
 
-  res.render('admin-users', { title: 'Admin', adminUsers:adminUsers, productOwners:productOwners, user: req.cookies.userEmail, userEmail: req.cookies.userEmail })
+  res.render('admin-users', { adminUsers:adminUsers, productOwners:productOwners, userEmail: req.cookies.userEmail })
 });
 
 router.get('/delete-project/:id', async (req, res) => {
@@ -184,65 +184,38 @@ router.get('/delete-project/:id', async (req, res) => {
 
  })
 
-// router.post('/processAdminRegister', [
+router.post('/processAdminRegister', [
   
-//   check('email', 'Email is not valid.')
-//     .isEmail()
-//     .normalizeEmail(),
-//   check('password1', 'This password must be 3+ characters long.')
-//     .exists()
-//     .isLength({ min:3 }),
+  // check('email', 'Email is not valid.').isEmail().normalizeEmail(),
+  check('email', 'Email is not valid.').custom(async(value, { req }) => {
+
+    return await AdminUser.findOne({ email: req.body.email }).then(user => {
+      if (user) {
+        return Promise.reject('E-mail already in use');
+      }
+    });
+  }),
+  check('password1', 'This password must be 6+ characters long.').exists().isLength({ min:6 }),
     
-//   check('password1').custom((value, { req }) => {
-//     if (value !== req.body.password2){
+  check('password1').custom((value, { req }) => {
+    if (value !== req.body.password2){
       
-//       throw new Error('Passwords do not match..')
-//     } else {
-//       return true;
-//     }
+      throw new Error('Passwords do not match..')
+    } else {
+      return true;
+    }
 
-//   })
-// ], async (req, res) => {
-
-//   let userAdmin = await AdminUser.findOne({ email: req.body.email })
-//   if (userAdmin) return res.status(400).send("User already registered.")
-
-//   const salt = await bcrypt.genSalt(10);
-
-//   const errors = validationResult(req);
-
-//     if (!errors.isEmpty()){
-//       const alert = errors.array();
-//       return res.render('admin-register', {alert})
-//     }
-
-//   if(req.body.password1 === req.body.password2){
-
-//     userAdmin = new AdminUser({
-//       firstname: req.body.firstName,
-//       lastname: req.body.lastName,
-//       email : req.body.email,
-//       role: req.body.role,
-//       password : await bcrypt.hash(req.body.password1, salt),   
-//     }).save()
-//     .then( item =>{
-//       AdminCreatedMessage();
-//       res.redirect('/admin/')
-//     }).catch(error=>{
-//       res.status(400).send('unable to save in database')
-//     })
-    
-//   } else {
-//     return res.send("Passwords are not the same")
-//   }
-// });
-
-router.post('/processAdminRegister',  async (req, res) => {
-
-  let userAdmin = await AdminUser.findOne({ email: req.body.email })
-  if (userAdmin) return res.status(400).send("User already registered.")
+  })
+], async (req, res) => {
 
   const salt = await bcrypt.genSalt(10);
+
+  const errors = validationResult(req);
+
+    if (!errors.isEmpty()){
+      const alert = errors.array();
+      return res.render('admin-register', {alert, title: "Admin Register", userEmail: req.cookies.userEmail})
+    }
 
   if(req.body.password1 === req.body.password2){
 
@@ -264,6 +237,8 @@ router.post('/processAdminRegister',  async (req, res) => {
     return res.send("Passwords are not the same")
   }
 });
+
+
 
 router.get('/logout', async (req, res) => {
   res.clearCookie('userEmail')

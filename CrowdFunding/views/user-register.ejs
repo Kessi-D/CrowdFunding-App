@@ -1,6 +1,4 @@
-<%- include("navbar") %>
-
-<br>
+<%-  include("navbar") %>
 
   <div class="col-md-4 mx-auto col-lg-3">
     <form class="p-4 p-md-5 border rounded-3 bg-light" action="/processProjectOwnerRegister" method="post">
@@ -41,8 +39,7 @@
         </select>
         <label for="exampleFormControlInput1" class="form-label">Country</label>
       </div>
-
-      <div class="form-floating mb-3">
+      <div class="form-floating mb-3" hidden>
         
         <select class="form-select" aria-label="Default select example" name="role" required>
             <option value="project-owner">Project Owner</option>
@@ -59,9 +56,9 @@
         <label for="floatingPassword">Confirm Password</label>
       </div>
 
-      <button class="w-100 btn btn-lg btn-primary" type="submit">Register Person</button>
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
       <hr class="my-4">
-      <small class="text-muted">Have an account? <a href="/user-login">Log In</a></small>
+      <small class="text-muted">Have an account? <a href="/login">Log In</a></small>
     </form>
   </div>
 

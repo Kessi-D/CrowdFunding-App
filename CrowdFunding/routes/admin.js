@@ -40,8 +40,13 @@ router.get('/', async function(req, res, next) {
   let reviewedProjects = await Project.find({status:"reviewed"} || {status:"denied"})
   reviewedProjects = reviewedProjects.slice(0,5)
 
-  res.render('admin-dashboard', { countProjects: countProjects, countTotalUsers: countTotalUsers, projects:projects, reviewedProjects:reviewedProjects, countReviewedProjects: countReviewedProjects, user: req.user})
+  res.render('admin-dashboard copy', { countProjects: countProjects, countTotalUsers: countTotalUsers, projects:projects, reviewedProjects:reviewedProjects, countReviewedProjects: countReviewedProjects, user: req.user})
 });
+
+// router.get('/', async function(req, res, next) {
+  
+//   res.render('b')
+// });
 
 router.get('/projects', async function(req, res, next) {
   const projectsFromVistors = await Project.find({ status: "inactive" })

@@ -1,0 +1,95 @@
+<%- include("navbar") %>
+
+<br /><br />
+<div class="container">
+  <div class="row">
+    <div class="col-md-7">
+      <% for (var i=0; i < project.initalImages.length; i++) { %>
+      <figure class="figure">
+        <img
+          src="/images/initial_stage_pics/<%= project.initalImages[i] %>"
+          class="figure-img img-fluid rounded"
+          alt="A generic square placeholder image with rounded corners in a figure."
+        />
+        <figcaption class="figure-caption">
+          <%=project.title%>.
+        </figcaption>
+      </figure>
+      <% } %> <br />
+      
+
+      <h3>PROJECT DECRIPTION</h3>
+      <p><%=project.description%></p>
+
+      <h3>IMPACT OF PROJECT</h3>
+      <p><%=project.impact%></p>
+
+      <br /><br />
+      <div class="container">
+        <% for (var i=0; i < project.finalImages.length; i++) {%>
+        <figure class="figure">
+          <img
+            src="/images/final_stage_pics/<%= project.finalImages[i] %>"
+            class="figure-img img-fluid rounded"
+            alt="A generic square placeholder image with rounded corners in a figure."
+          />
+          <figcaption class="figure-caption">
+            <%= project.title%>.
+          </figcaption>
+        </figure>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="col-md-5">
+      <hr />
+      <div class="container">
+        <div class="row">
+          <h1 class="text-center text-uppercase"><%= project.title%></h1>
+        </div>
+        <hr />
+        <br />
+        <div class="container">
+          <div class="card-deck mb-3 text-center">
+            <div class="card mb-4 box-shadow">
+              <div class="card-header">
+                <h4 class="my-0 font-weight-normal">Target Amount</h4>
+              </div>
+              <div class="card-body">
+                <h1 class="card-title pricing-card-title">
+                  $<%= project.amountAsked%> <small class="text-muted"></small>
+                </h1>
+               
+                <button
+                  type="button"
+                  class="btn btn-lg btn-block btn-outline-primary"
+                >
+                  <a href="/donate" class="nav-link">Donate</a>
+                </button>
+                <ul class="list-unstyled mt-3 mb-4">
+                  <li>
+                    <div class="progress">
+                      <div
+                        class="progress-bar bg-success"
+                        role="progressbar"
+                        style="width: 25%;"
+                        aria-valuenow="25"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
+                    <%= project.percentage%>%
+                  </li>
+                  <li>Amount donated</li>
+                  <li>Location:<%=project.location%></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+<%- include("footer") %>

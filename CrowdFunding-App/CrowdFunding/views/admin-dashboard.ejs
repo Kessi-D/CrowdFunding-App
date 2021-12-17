@@ -1,0 +1,364 @@
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+  crossorigin="anonymous"
+/>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+<style>
+	.row{
+		/* max-width: 100%; */
+		margin-top: 20px;
+		
+	}
+	body{
+		background-color: #dfcbcb;
+		opacity: 0.9;
+	}
+	/* .card{
+		margin-left: 20px;
+	} */
+	#sidebar-wrapper{
+		z-index: 1;
+		position: absolute;
+		width: 0;
+		height: 100%;
+		overflow-y: hidden;
+		background-color: #e7e3e3;
+		opacity: 0.9;
+	}
+	#main-page-wrapper{
+		width: 100%;
+		position: absolute;
+		padding: 15px;
+	}
+	#wrapper.menuDisplayed #sidebar-wrapper{
+		width: 250px;
+	}
+	#wrapper.menuDisplayed #main-page-wrapper{
+		padding-left: 250px;
+	}
+
+</style>
+
+<div id="wrapper">
+	<!-- sidebar -->
+	<div id="sidebar-wrapper">
+		<ul class="sidebar-nav mb-3">
+			<a href="/admin/register" class="text-decoration-none list-unstyled p-5"><li>Create Users</li></a>
+			<a href="/admin/projects" class="text-decoration-none list-unstyled p-5"><li>Projects</li></a>
+			<a href="" class="text-decoration-none list-unstyled p-5"><li>Funds</li></a>
+			<a href="" class="text-decoration-none list-unstyled p-5"><li>Notifications</li></a>
+		</ul>
+	</div>
+
+	<!-- mainpage -->
+	<div id="main-page-wrapper">
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<div class="container-fluid">
+			  <a class="navbar-brand" href="/"><img src="https://library.maximnyansa.com/static/media/maxim_logo.f94113f2.png" alt=""></a>
+			  <button
+				class="navbar-toggler"
+				type="button"
+				data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent"
+				aria-expanded="false"
+				aria-label="Toggle navigation"
+			  >
+				<span class="navbar-toggler-icon"></span>
+			  </button>
+			  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-row-reverse">
+				  <li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="/create-project"
+					  >Start a Project</a>
+				  </li>
+				  <li class="nav-item dropdown">
+					<a
+					  class="nav-link dropdown-toggle"
+					  href="#"
+					  id="navbarDropdown"
+					  role="button"
+					  data-bs-toggle="dropdown"
+					  aria-expanded="false"
+					>
+					  Routes
+					</a>
+					<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+					  <li><a class="dropdown-item" href="/admin">Admin</a></li>
+					  <li><hr class="dropdown-divider" /></li>
+					  <li><a class="dropdown-item" href="/reviewer">Reviewer</a></li>
+					  <li><hr class="dropdown-divider" /></li>
+					  <li><a class="dropdown-item" href="/financial">Financial Admin</a></li>
+		  
+					</ul>
+				  </li>
+				  
+		  
+			  
+				</ul>
+				<!-- <form class="d-flex">
+				  <input
+					class="form-control me-2"
+					type="search"
+					placeholder="Search"
+					aria-label="Search"
+				  />
+				  <button class="btn btn-outline-success" type="submit">Search</button>
+				  
+				</form> -->
+		  
+				
+		  
+				<% if (!user) { %>
+				  <a type="button" href="/users/user-signup" class="btn btn-secondary" style="margin-right: 10px;">Sign Up</a>
+				  <a type="button" href="/users/login" class="btn btn-success">Login</a>
+		  
+				<% } else { %>
+		  
+		  
+					<%= user.username %>
+					<a type="button" href="/users/logout" class="btn btn-danger">Logout</a>
+				<% } %>
+			  </div>
+			</div>
+		  </nav>
+		<div class="container-fluid">
+			
+			  
+			<div class="row">
+				<div class="col-lg-12">
+					<a href="#" class="btn btn-success" id="menu-toggle" >Toggle menu</a>
+					
+					<div class="container">
+						<div class="row g-4">
+						<div class="col-md-6 col-lg-3">
+							<div class="card bg-ligt">
+								<div class="card-body text-center"> 
+									<h3 class="card-title mb-3"><a href="/admin/users" class="text-decoration-none">Users</a> </h3>
+									<h4 class="card-text"><%= countTotalUsers %></h4>
+								</div>
+							</div>
+						</div>
+					
+						<div class="col-md-6 col-lg-3">
+							<div class="card bg-ligt">
+								<div class="card-body text-center"> 
+									<h3 class="card-title mb-3">Projects Created</h3>
+									<h4 class="card-text"><%= countProjects %></h4>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-lg-3">
+							<div class="card bg-ligt">
+								<div class="card-body text-center"> 
+									<h3 class="card-title mb-3">Reviewed Projects</h3>
+									<h4 class="card-text"><%= countReviewedProjects %></h4>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-lg-3">
+							<div class="card bg-ligt">
+								<div class="card-body text-center"> 
+									<h3 class="card-title mb-3">Funded Projects</h3>
+									<h4 class="card-text">0</h4>
+								</div>
+							</div>
+						</div>
+						
+						</div>
+					</div>
+					<div class="container">
+						<div class="row g-4">
+							<div class="col-md-6 col-lg-4">
+								<div class="card bg-light">
+									<div class="card-body text-center"> 
+										
+										<h4 class="card-title mb-4"><a href="/admin/projects" class="text-decoration-none text-dark">Recent Projects</a> </h4>
+
+										<% for (let i = 0; i < projects.length; i++) { %>
+										
+											<div class="row mb-3">
+												<div class="col-sm-4"><a href="/admin/projects"><img src="/images/final_stage_pics/<%= projects[i].finalImages[0] %>" alt="" class="img-fluid "></a></div>
+												<div class="col-sm-8"><p class="text-truncate"><%= projects[i].description %></p></div>
+											</div>
+										
+										<% } %>
+
+		
+									</div>
+									
+								</div>
+								
+							</div>
+							<div class="col-md-6 col-lg-4">
+								<div class="card bg-light">
+									<div class="card-body text-center"> 
+										<h4 class="card-title mb-4"><a href="/admin/reviewed" class="text-decoration-none text-dark">Reviewed Projects</a> </h4>
+										<% for (let i = 0; i < reviewedProjects.length; i++) { %>
+										
+											<div class="row mb-3">
+												<div class="col-sm-4"><a href="/admin/reviewed"><img src="/images/final_stage_pics/<%= reviewedProjects[i].finalImages[0] %>" alt="" class="img-fluid"></a></div>
+												<div class="col-sm-8"><p class="text-truncate"><%= reviewedProjects[i].description %></p></div>
+											</div>
+										
+										<% } %>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6 col-lg-4">
+								<div class="card bg-light mb-4">
+									<div class="card-body text-center"> 
+										<p>Lorem ipsum, dolor sit amet consectetur adipisicing eli. Ab earum odio nulla nemo.</p>
+									</div>
+									<div class="card">
+										<div class="card-body text-center"> 
+											<div>Lorem ipsum, dolor sit amet consectetur adipisicing eli. Ab earum odio nulla nemo.</div>
+										</div>
+									</div>
+									
+								
+								</div>
+								<div class="card bg-light ">
+									<div class="card-body text-center"> 
+										<p>Lorem ipsum, dolor sit amet consectetur adipisicing eli. Ab earum odio nulla nemo..</p>
+									</div>
+									<div class="card ">
+										<div class="card-body text-center"> 
+											<div>Lorem ipsum, dolor sit amet consectetur adipisicing eli. Ab earum odio nulla nemo.</div>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+
+					</div>
+					
+					<div class="container">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card bg-light">
+									<div class="card-body">
+										<canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+									</div>
+								</div>
+								
+							</div>
+							<div class="col-md-6">
+								<div class="card bg-light">
+									<div class="card-body">
+										<canvas id="Chart" style="width:100%;max-width:600px"></canvas>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+			
+					   
+				</div>
+			</div>
+		</div>
+	
+
+		<div class="container bg-light">
+			<div class="row">
+				<div class="col-sm-6">
+					<div class="column">
+						<div class="col-sm-2"><img src="data:image/jpeg;base64,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" alt="" class="img-fluid"></div>
+						<div class="col-sm-8"><p>Lorem ipsum um odio mollitia necessitatibus autem dolorum.</p></div>
+					</div>
+					<div class="col-sm-3">
+						Saas Project
+					</div>
+					<div class="col-sm-3">
+						$2000
+					</div>
+					<div class="col-sm-3">
+						Approved
+					</div>
+			</div>
+					<!-- <li>Saas Project</li>
+					<li>Save a Child</li>
+					<li>Build a house</li>
+					<li>Farming project</li>
+				</div>
+				<div class="col-sm-3">
+					<li>In progess</li>
+					<li>Approved</li>
+					<li>In progress</li>
+					<li>Rejected</li>
+				</div>
+				<div class="col-sm-3">
+					<li>$2000</li>
+					<li>$2000</li>
+					<li>$2000</li>
+					<li>$2000</li>
+				</div> -->
+			</div>
+		</div>
+		
+		
+	</div>
+
+</div>
+
+
+
+<script>
+	$("#menu-toggle").click(function(e){
+		e.preventDefault();
+		$("#wrapper").toggleClass("menuDisplayed");
+	})
+
+	var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
+	var yValues = [55, 49, 44, 24, 15];
+	var barColors = [
+	"#b91d47",
+	"#00aba9",
+	"#2b5797",
+	"#e8c3b9",
+	"#1e7145"
+	];
+
+	new Chart("myChart", {
+		type: "doughnut",
+		data: {
+			labels: xValues,
+			datasets: [{
+			backgroundColor: barColors,
+			data: yValues
+			}]
+		},
+		options: {
+			title: {
+			display: true,
+			text: "World Wide Wine Production 2018"
+			}
+		}
+	});
+	new Chart("Chart", {
+		type: "bar",
+		data: {
+			labels: xValues,
+			datasets: [{
+			backgroundColor: barColors,
+			data: yValues
+			}]
+		},
+		options: {
+			legend: {display: false},
+			title: {
+			display: true,
+			text: "World Wine Production 2018"
+			}
+		}
+		});
+</script>
+

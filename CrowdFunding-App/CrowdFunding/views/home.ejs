@@ -1,0 +1,371 @@
+<style>
+  .img-container {
+    position: relative;
+  }
+  .image {
+    position: absolute;
+    z-index: -1;
+    right: 0;
+  }
+  .img {
+    position: relative;
+    left: 600px;
+    top: 100px;
+  }
+  .text {
+    margin-left: 100px;
+    margin-bottom: 50px;
+    font-size: 70px;
+  }
+  .intro {
+    width: 500px;
+    margin-left: 100px;
+  }
+  .butn {
+    margin-left: 100px;
+    margin-bottom: 50px;
+    margin-top: 50px;
+    /* color: greenyellow; */
+  }
+</style>
+<%- include("navbar") %>
+<!-- Bootstrap CSS -->
+
+<div class="row img-container">
+  <div class="col-md-6">
+    <img
+      class="image"
+      src="../images/final_stage_pics/vector-bg.png"
+      width="60%"
+      alt=""
+    />
+    <div class="sm-12">
+      <br /><br /><br />
+      <h1 class="mt-5 text">CrowdFund APP</h1>
+
+      <p class="intro">
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Explicabo quod
+        in error perferendis amet incidunt magnam exercitationem, enim ipsam
+        ratione earum temporibus reprehenderit laborum ducimus hic fuga
+        voluptate voluptatem dolorem!
+      </p>
+      <button
+        class="butn btn btn-lg"
+        type="button"
+        style="background-color: #a7ef25;"
+      >
+        More
+      </button>
+    </div>
+  </div>
+  <div class="col-md-6"></div>
+</div>
+<!-- <div class="row mt-5 mb-5 top-0 end-0">
+    <div class="col-lg-12">
+      <img src="../images/final_stage_pics/ventor-content.png" alt="" width="40%" class="img">
+    </div>
+    
+    <div>
+
+    </div>
+  </div> -->
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+<!-- <div class="p-5 mb-4 bg-success rounded-3">
+  <div class="container-fluid py-5">
+    <h1 class="display-5 fw-bold">Display Projects</h1>
+    <p class="col-md-8 fs-4">
+      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae
+      distinctio eos temporibus ab, modi quo qui tenetur officiis explicabo rem
+      minus voluptatibus quod debitis esse sapiente numquam dignissimos aperiam
+      labore..
+    </p>
+    <button class="btn btn-primary btn-lg" type="button">More</button>
+  </div>
+</div> -->
+
+
+<br />
+
+<br />
+
+<!-- <div class="container">
+  <div class="row align-items-md-stretch">
+    <div class="col-md-6">
+      <img class="d-block w-100" src="/images/final_stage_pics/thumbnail1.png" alt="First slide">
+    </div>
+
+    <div class="col-md-6">
+      <img class="d-block w-100" src="/images/final_stage_pics/thumbnail1.png" alt="First slide">
+    </div>
+</div> -->
+<br /><br /><br />
+
+<br /><br /><br />
+
+<div class="container">
+  <div class="d-fl row">
+    <h3 class="pb-2 border-bottom">Projects in Ghana</h3>
+    <br />
+    <br />
+    <!-- loop through the project model and render the ejs -->
+    <% for (var i=0; i < ghanaProjects.length; i++) { %>
+    <div class="col align-self-end">
+      <div class="card" style="width: 18rem;">
+        <a href="/view-project/<%= ghanaProjects[i]._id %>"
+          ><img
+            class="card-img-top"
+            src="/images/final_stage_pics/<%= ghanaProjects[i].finalImages[0] %>"
+            alt="project image"
+          />
+        </a>
+
+        <div class="card-body">
+          <h5 class="project-title">
+            <a
+              href="/view-project/<%= ghanaProjects[i]._id %>"
+              class="text-decoration-none"
+              ><%= ghanaProjects[i].title %></a
+            >
+          </h5>
+          <hr />
+          <p class="project-text text-truncate">
+            <%= ghanaProjects[i].description %>
+          </p>
+
+          <p>
+            <b>GHS <%= ghanaProjects[i].moneyPledged %> raised</b> of GHS <%=
+            ghanaProjects[i].amountAsked %>
+          </p>
+          <p><b><%= ghanaProjects[i].percentage %> % </b></p>
+
+          <% if (ghanaProjects[i].percentage >= 100) { %>
+          <span class="btn btn-warning">
+            Fully Funded
+          </span>
+          <br />
+          <br />
+          <div class="progress">
+            <div
+              class="progress-bar bg-danger"
+              role="progressbar"
+              style="width: 100%;"
+              aria-valuenow="100"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+          </div>
+          <% } else { %>
+
+          <div class="progress">
+            <div
+              class="progress-bar bg-success"
+              role="progressbar"
+              style="width: <%=ghanaProjects[i].percentage%>%;"
+              aria-valuenow="60"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+          </div>
+
+          <% } %>
+
+          <!-- <div class="card-body">
+              <a href="#" class="card-link">Card link</a>
+              <a href="#" class="card-link">Another link</a>
+            </div> -->
+        </div>
+      </div>
+
+      <% } %>
+    </div>
+    <br /><br />
+
+    <div
+      id="carouselExampleIndicators"
+      class="carousel slide"
+      data-bs-ride="carousel"
+    >
+      <div class="carousel-indicators">
+        <button
+          type="button"
+          data-bs-target="#carouselExampleIndicators"
+          data-bs-slide-to="0"
+          class="active"
+          aria-current="true"
+          aria-label="Slide 1"
+        ></button>
+        <button
+          type="button"
+          data-bs-target="#carouselExampleIndicators"
+          data-bs-slide-to="1"
+          aria-label="Slide 2"
+        ></button>
+        <button
+          type="button"
+          data-bs-target="#carouselExampleIndicators"
+          data-bs-slide-to="2"
+          aria-label="Slide 3"
+        ></button>
+      </div>
+      <div class="carousel-inner" style="height: 500px;">
+        <div class="carousel-item active">
+          <img
+            src="https://image.shutterstock.com/image-vector/crowdfunding-banner-web-icon-business-260nw-1291959130.jpg"
+            class="d-block w-100 img-fluid max-width: 100%"
+            style="height: 100%;"
+            alt="..."
+          />
+          <div class="carousel-caption d-none d-md-block">
+            <h5>This is an Excellent App</h5>
+            <p>You can get money from your projects</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img
+            src="https://images.unsplash.com/photo-1485459416579-6d3292a13a69?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8aGVpZ2h0fGVufDB8fDB8fA%3D%3D&w=1000&q=80"
+            style="height: 100%;"
+            class="d-block w-100"
+            alt="..."
+          />
+          <div class="carousel-caption d-none d-md-block">
+            <h5>This is an Excellent App</h5>
+            <p>You can get money from your projects</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img
+            src="https://www.feedough.com/wp-content/uploads/2019/04/crowdfunding.png"
+            class="d-block w-100"
+            style="height: 100%;"
+            alt="..."
+          />
+          <div class="carousel-caption d-none d-md-block">
+            <h5>This is an Excellent App</h5>
+            <p>You can get money from your projects</p>
+          </div>
+        </div>
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    
+    <div class="row" style="margin-top: 50px;">
+      <h3 class="pb-2 border-bottom">Projects in Burkina Faso</h3>
+      <br />
+      <br />
+      <!-- loop through the project model and render the ejs -->
+      <% for (var i=0; i < burkinaProjects.length; i++) { %>
+      <div class="col align-self-end">
+        <div class="card" style="width: 18rem;">
+          <a href="/view-project/<%= burkinaProjects[i]._id %>"
+            ><img
+              class="card-img-top"
+              src="/images/final_stage_pics/<%= burkinaProjects[i].finalImages[0] %>"
+              alt="project image"
+            />
+          </a>
+
+          <div class="card-body">
+            <h5 class="project-title">
+              <a
+                href="/view-project/<%= burkinaProjects[i]._id %>"
+                class="text-decoration-none"
+                ><%= burkinaProjects[i].title %></a
+              >
+            </h5>
+            <hr />
+            <p class="project-text text-truncate">
+              <%= burkinaProjects[i].description %>
+            </p>
+
+            <p>
+              <b>CFA <%= burkinaProjects[i].moneyPledged %> raised</b> of CFA
+              <%= burkinaProjects[i].amountAsked %>
+            </p>
+            <p><b><%= burkinaProjects[i].percentage %> % </b></p>
+
+            <% if (burkinaProjects[i].percentage >= 100) { %>
+            <span class="btn btn-warning">
+              Fully Funded
+            </span>
+            <br />
+            <br />
+            <div class="progress">
+              <div
+                class="progress-bar bg-danger"
+                role="progressbar"
+                style="width: 100%;"
+                aria-valuenow="100"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+            <% } else { %>
+
+            <div class="progress">
+              <div
+                class="progress-bar bg-success"
+                role="progressbar"
+                style="width: <%=burkinaProjects[i].percentage%>%;"
+                aria-valuenow="60"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+
+            <% } %>
+          </div>
+          .
+        </div>
+
+        <% } %>
+      </div>
+    </div>
+    <div class="container mt-5">
+      <div class="row align-items-md-stretch">
+        <div class="col-md-6">
+          <div class="h-100 p-5 text-white bg-dark rounded-3">
+            <h2>Display Projects</h2>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit
+              voluptates, molestias delectus quis exercitationem reiciendis!
+              Debitis, non. Debitis asperiores, explicabo ipsam, dignissimos
+              doloremque consectetur a eveniet alias odit atque accusantium.
+            </p>
+            <button class="btn btn-outline-light" type="button">Donate</button>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="h-100 p-5 bg-light border rounded-3">
+            <h2>Recent projects</h2>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia
+              pariatur nihil minima deleniti, consequuntur esse inventore
+              blanditiis dolorum accusantium odio sed modi numquam! Impedit
+              laboriosam maiores dolores, odio facilis ullam!.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+</div>
+<%- include("footer") %>

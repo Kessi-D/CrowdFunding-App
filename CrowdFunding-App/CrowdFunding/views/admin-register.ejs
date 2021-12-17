@@ -1,0 +1,59 @@
+<%- include("admin-navbar") %>   
+<br>
+    
+<main>
+
+  <div class="col-md-4 mx-auto col-lg-3">
+    <form class="p-4 p-md-5 border rounded-3 bg-light" action="/admin/processAdminRegister" method="post">
+
+      <% if (typeof alert != 'undefined') { %>
+        <% alert.forEach(function(error) { %>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <%= error.msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+        <% }) %>
+    <% } %>
+    
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="floatingInput" name="firstName">
+        <label for="floatingInput">First Name</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="floatingInput" name="lastName">
+        <label for="floatingInput">Last Name</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="floatingInput" name="email">
+        <label for="floatingInput">Email address</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        
+        <select class="form-select" aria-label="Default select example" name="role">
+            <option value="reviewer">Reviewer</option>
+            <option value="financial">Financial Administator</option>
+        </select>
+        <label for="exampleFormControlInput1" class="form-label">Role</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="floatingPassword" name="password1">
+        <label for="floatingPassword">Password</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="floatingPassword" name="password2">
+        <label for="floatingPassword">Confirm Password</label>
+      </div>
+
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Register Person</button>
+      <hr class="my-4">
+      <small class="text-muted">By clicking Register Person, you the admin is creating an account for an individual.</small>
+    </form>
+  </div>
+
+  
+</main>
+
+<%- include("admin-footer") %>   
+

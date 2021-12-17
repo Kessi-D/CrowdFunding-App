@@ -1,0 +1,66 @@
+<%- include("admin-navbar") %> 
+  <main>
+
+
+    <div class="album py-5 bg-light">
+      <br>
+      <div class="container">
+
+        <h2 class="pb-2 border-bottom">Approved Projects by Reviewers</h2><br>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+        <% for(var i=0; i< projectsFromReviewers.length; i++) { %>
+          <div class="col">
+            <div class="card shadow-sm">
+              <img src="/images/final_stage_pics/<%= projectsFromReviewers[i].finalImages[0] %>" alt="" style="height: 250px;">
+
+              <div class="card-body">
+                <p class="card-text text-truncate"><%= projectsFromReviewers[i].description %></p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a type="button" href="/admin/view-project/<%= projectsFromReviewers[i]._id %>" class="btn btn-sm btn-outline-secondary">View</a>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  </div>
+                  <small class="text-muted">9 mins</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% } %>
+
+        </div>
+      </div>
+
+      <div class="container">
+
+
+        <h2 class="pb-2 border-bottom">Rejected Projects by Reviewers</h2><br>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+        <% for(var i=0; i< deniedProject.length; i++) { %>
+          <div class="col">
+            <div class="card shadow-sm">
+              <img src="/images/final_stage_pics/<%= deniedProject[i].finalImages[0] %>" alt="" class="img-fluid">
+
+              <div class="card-body">
+                <p class="card-text text-truncate"><%= deniedProject[i].description %></p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <a type="button" href="/admin/view-project/<%= deniedProject[i]._id %>" class="btn btn-sm btn-outline-secondary">View</a>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  </div>
+                  <small class="text-muted">9 mins</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% } %>
+
+        </div>
+      </div>
+
+
+  </main>
+  
+
+<%- include("admin-footer") %>   

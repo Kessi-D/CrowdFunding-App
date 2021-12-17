@@ -17,13 +17,12 @@ var methodOverride = require('method-override')
 
 
 var indexRouter = require('./routes/index');
-// var usersRouter = require('./routes/users');
+var usersRouter = require('./routes/users');
 var adminRouter = require('./routes/admin')
 var reviewerRouter = require('./routes/reviewer')
 var financialRouter = require('./routes/financial')
 
-const AdminUser = require('./models/adminUser');
-const ProjectOwner = require('./models/projectOwner')
+const User = require('./models/User');
 
 const { authUser, authRole } = require('./basicAuth');
 
@@ -53,11 +52,14 @@ app.use(setUser)
 
 
 app.use('/', indexRouter);
+app.use('/users', usersRouter);
 app.use('/admin',  adminRouter)
 app.use('/reviewer',  reviewerRouter)
 app.use('/financial', financialRouter)
 
+
 // app.use('/', indexRouter);
+// app.use('/users', usersRouter)
 // app.use('/admin', authUser, authRole('admin'), adminRouter)
 // app.use('/reviewer', authUser, authRole('reviewer'), reviewerRouter)
 // app.use('/financial',authUser, authRole('financial'), financialRouter)
@@ -116,17 +118,13 @@ async function setUser(req,res,next){
 
   const loggedInUserEmail = req.cookies.userEmail
 
-  let projectOwner;
-  let adminUser;
-
+ 
   if(loggedInUserEmail){
-    adminUser = await AdminUser.findOne({ email : loggedInUserEmail })
-    projectOwner = await ProjectOwner.find({ email : loggedInUserEmail })
+    const user = await User.findOne({ email : loggedInUserEmail })
+    console.log(user)
 
-    if (adminUser){
-      req.user = adminUser;
-    } else {
-      req.user = projectOwner[0];
+    if (user){
+      req.user = user;
     }
   }
 

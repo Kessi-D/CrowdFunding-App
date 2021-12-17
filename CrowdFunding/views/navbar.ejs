@@ -64,14 +64,14 @@
       
 
       <% if (!user) { %>
-        <a type="button" href="/user-signup" class="btn btn-secondary" style="margin-right: 10px;">Sign Up</a>
-        <a type="button" href="/login" class="btn btn-success">Login</a>
+        <a type="button" href="/users/user-signup" class="btn btn-secondary" style="margin-right: 10px;">Sign Up</a>
+        <a type="button" href="/users/login" class="btn text-white" style="background-color: #79A00A;">Login</a>
 
       <% } else { %>
 
 
           <%= user.username %>
-          <a type="button" href="/logout" class="btn btn-danger">Logout</a>
+          <a type="button" href="/users/logout" class="btn btn-danger">Logout</a>
       <% } %>
     </div>
   </div>

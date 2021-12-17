@@ -40,8 +40,8 @@ router.get('/', async function(req, res, next) {
 });
 
 // router.get('/', async function(req, res, next) {
-//   const users = await User.find()
-//   res.render('user-list', { users:users })
+
+//   res.render('view-project copy')
 
 // });
 
@@ -108,6 +108,11 @@ router.get('/view-project/:id', async (req,res)=>{
   const project = await Project.findById(req.params.id)
   res.render('view-project', {project:project, user: req.user})
 });
+
+// router.get('/view-project/:id', async (req,res)=>{
+//   // const project = await Project.findById(req.params.id)
+//   res.render('view-project', {user: req.user})
+// });
 
 const cpUpload = uploadInitialStagePics.fields([{ name: 'initialStageImgs', maxCount: 3 }, { name: 'finalStageImgs', maxCount: 3 }])
 

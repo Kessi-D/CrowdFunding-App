@@ -22,6 +22,8 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0 flex-row-reverse">
+        
+        
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/create-project"
             >Start a Project</a>
@@ -47,6 +49,18 @@
           </ul>
         </li>
         
+        <!-- <li class="nav-item">
+          <div id="google_translate_element"></div>
+
+          <script type="text/javascript">
+          function googleTranslateElementInit() {
+            new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+          }
+          </script>
+          
+          <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+            </div>
+        </li> -->
 
     
       </ul>
@@ -69,8 +83,7 @@
 
       <% } else { %>
 
-
-          <%= user.username %>
+          <a style="color: black;"><%= user.email %></a> <br>
           <a type="button" href="/users/logout" class="btn btn-danger">Logout</a>
       <% } %>
     </div>

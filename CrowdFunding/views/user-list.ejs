@@ -1,5 +1,5 @@
-
-    <main>
+<%- include("navbar") %>
+<main>
     
       <div class="album py-5 bg-light">
         <h2>Users</h2>
@@ -17,13 +17,14 @@
               </thead>
               <tbody>
     
-                <% for (var i=0; i< Users.length; i++) { %>
+                <% for (var i=0; i < usersList.length; i++) {%>
                   <tr>
-                    <td><%= Users[i]._id %></td>
-                    <td><%= Users[i].firstname %></td>
-                    <td><%= Users[i].lastname %></td>
-                    <td><%= Users[i].email %></td>
-                    <td><%= Users[i].role %></td>
+                    <td><%= usersList[i]._id %></td>
+                    <td><%= usersList[i].firstname %></td>
+                    <td><%= usersList[i].lastname %></td>
+                    <td><%= usersList[i].email %></td>
+                    <td><%= usersList[i].role %></td>
+   
                     <td>
                       <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         Delete
@@ -47,23 +48,4 @@
     
     
 
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Delete User</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to delete the User?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Cancel</button>
-        <a href="/admin/delete-admin-user/<%= Users[i]._id %>" class="btn btn-danger">Yes, Delete</a>
-      </div>
-    </div>
-  </div>
-</div>
 

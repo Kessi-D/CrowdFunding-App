@@ -32,16 +32,18 @@ router.get('/', async function(req, res, next) {
   const countTotalUsers = totalProjectOwners + adminUsers
   const countProjects = await Project.find().count()
   const countReviewedProjects = await Project.find({ status: "reviewed"}).count()
-  
+
+  let usersList = await User.find()
+  usersList = usersList.slice(0,5 )
 
 
-  let projects = await Project.find()
+  let projects = await Project.find({ status: "inactive"})
   projects = projects.slice(0,5 )
 
   let reviewedProjects = await Project.find({status:"reviewed"} || {status:"denied"})
   reviewedProjects = reviewedProjects.slice(0,5)
 
-  res.render('admin-dashboard copy', { countProjects: countProjects, countTotalUsers: countTotalUsers, projects:projects, reviewedProjects:reviewedProjects, countReviewedProjects: countReviewedProjects, user: req.user})
+  res.render('admin-dashboard copy', { countProjects: countProjects, countTotalUsers: countTotalUsers, projects:projects, reviewedProjects:reviewedProjects, countReviewedProjects: countReviewedProjects, usersList:usersList, user: req.user})
 });
 
 // router.get('/', async function(req, res, next) {
@@ -135,12 +137,17 @@ router.post('/processAdminProjectEdit', cpUpload , async (req, res) => {
   
 });
 
-// router.get('/users', async (req, res) => {
-//   const users = await AdminUser.find()
-//   const productOwners = await ProjectOwner.find()
+router.get('/users', async (req, res) => {
+  const usersList = await User.find()
+  // const usersEmail = await User.find({email})
+  
+  let user = req.user
 
-//   res.render('admin-users', { adminUsers:adminUsers, productOwners:productOwners, userEmail: req.cookies.userEmail })
-// });
+  // console.log(usersList)
+  // console.log(user)
+  // console.log(usersEmails)
+  res.render('user-list', {usersList:usersList, user: user})
+});
 
 router.get('/delete-project/:id', async (req, res) => {
   const project = await Project.findById(req.params.id)

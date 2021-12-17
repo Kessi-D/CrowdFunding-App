@@ -1,7 +1,7 @@
 <%-  include("navbar") %>
 
   <div class="col-md-4 mx-auto col-lg-3">
-    <form class="p-4 p-md-5 border rounded-3 bg-light" action="/processProjectOwnerRegister" method="post">
+    <form class="p-4 p-md-5 border rounded-3 bg-light" action="/users/processProjectOwnerRegister" method="post">
 
       <% if (typeof alert != 'undefined') { %>
         <% alert.forEach(function(error) { %>
@@ -58,7 +58,7 @@
 
       <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
       <hr class="my-4">
-      <small class="text-muted">Have an account? <a href="/login">Log In</a></small>
+      <small class="text-muted">Have an account? <a href="/users/login">Log In</a></small>
     </form>
   </div>
 

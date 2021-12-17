@@ -1,4 +1,4 @@
-<%- include("admin-navbar") %>   
+
     <main>
     
       <div class="album py-5 bg-light">
@@ -17,13 +17,13 @@
               </thead>
               <tbody>
     
-                <% for (var i=0; i< adminUsers.length; i++) { %>
+                <% for (var i=0; i< Users.length; i++) { %>
                   <tr>
-                    <td><%= adminUsers[i]._id %></td>
-                    <td><%= adminUsers[i].firstname %></td>
-                    <td><%= adminUsers[i].lastname %></td>
-                    <td><%= adminUsers[i].email %></td>
-                    <td><%= adminUsers[i].role %></td>
+                    <td><%= Users[i]._id %></td>
+                    <td><%= Users[i].firstname %></td>
+                    <td><%= Users[i].lastname %></td>
+                    <td><%= Users[i].email %></td>
+                    <td><%= Users[i].role %></td>
                     <td>
                       <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         Delete
@@ -33,20 +33,6 @@
                   </tr>
                 <% } %>
     
-                <% for (var j=0; j< productOwners.length; i++) { %>
-                  <tr>
-                    <td><%= productOwners[j]._id %></td>
-                    <td><%= productOwners[j].firstname %></td>
-                    <td><%= productOwners[j].lastname %></td>
-                    <td><%= productOwners[j].email %></td>
-                    <td>Product Owner</td>
-                    <td>
-                      <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal1">
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                <% } %>
                 
               </tbody>
             </table>
@@ -60,7 +46,6 @@
     
     
     
-<%- include("admin-footer") %>   
 
 
 <!-- Modal -->
@@ -76,7 +61,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Cancel</button>
-        <a href="/admin/delete-admin-user/<%= adminUsers[i]._id %>" class="btn btn-danger">Yes, Delete</a>
+        <a href="/admin/delete-admin-user/<%= Users[i]._id %>" class="btn btn-danger">Yes, Delete</a>
       </div>
     </div>
   </div>

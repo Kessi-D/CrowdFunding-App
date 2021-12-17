@@ -16,14 +16,18 @@ const usersSchema = new mongoose.Schema ({
         minlength: 3,
         maxlength: 200
     },
-    profilePic : {
+    email : {
         type:String,
+        required: true,
+        unique: true,
         trim:true
     },
-    email: {
+    profile_pic: {
         type:String,
-        unique: true,
-        
+    },
+    role: {
+        type:String,
+        required: true,  
     },
     password : {
         type:String,

@@ -1,7 +1,7 @@
 function authUser(req,res,next){
     if (req.user === undefined ){
         res.status(403)
-        return res.redirect('/login')
+        return res.redirect('/users/login')
     }
     next();
 }

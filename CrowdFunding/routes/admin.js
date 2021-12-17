@@ -17,7 +17,8 @@ const ProjectOwner = require('../models/projectOwner')
 const Role = require('../models/Role')
 const Country = require('../models/Country')
 
-const {check, validationResult } = require('express-validator')
+const {check, validationResult } = require('express-validator');
+const User = require('../models/User');
 
 const uploadInitialStagePics = multer({dest:'public/images/initial_stage_pics'});
 const uploadFinalStagePics = multer({dest:'public/images/final_stage_pics'});
@@ -134,12 +135,12 @@ router.post('/processAdminProjectEdit', cpUpload , async (req, res) => {
   
 });
 
-router.get('/users', async (req, res) => {
-  const adminUsers = await AdminUser.find()
-  const productOwners = await ProjectOwner.find()
+// router.get('/users', async (req, res) => {
+//   const users = await AdminUser.find()
+//   const productOwners = await ProjectOwner.find()
 
-  res.render('admin-users', { adminUsers:adminUsers, productOwners:productOwners, userEmail: req.cookies.userEmail })
-});
+//   res.render('admin-users', { adminUsers:adminUsers, productOwners:productOwners, userEmail: req.cookies.userEmail })
+// });
 
 router.get('/delete-project/:id', async (req, res) => {
   const project = await Project.findById(req.params.id)
@@ -194,7 +195,7 @@ router.post('/processAdminRegister', [
   // check('email', 'Email is not valid.').isEmail().normalizeEmail(),
   check('email', 'Email is not valid.').custom(async(value, { req }) => {
 
-    return await AdminUser.findOne({ email: req.body.email }).then(user => {
+    return await User.findOne({ email: req.body.email }).then(user => {
       if (user) {
         return Promise.reject('E-mail already in use');
       }
@@ -222,9 +223,7 @@ router.post('/processAdminRegister', [
       return res.render('admin-register', {alert, title: "Admin Register", userEmail: req.cookies.userEmail})
     }
 
-  if(req.body.password1 === req.body.password2){
-
-    userAdmin = new AdminUser({
+    user = new User({
       firstname: req.body.firstName,
       lastname: req.body.lastName,
       email : req.body.email,
@@ -238,9 +237,7 @@ router.post('/processAdminRegister', [
       res.status(400).send('unable to save in database')
     })
     
-  } else {
-    return res.send("Passwords are not the same")
-  }
+  
 });
 
 

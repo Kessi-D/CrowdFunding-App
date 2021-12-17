@@ -20,11 +20,6 @@ const Country = require('../models/Country')
 const { authUser, authRole } = require('../basicAuth');
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/CrowdFunding')
-.then(()=>console.log('Connected to the MongoDB...'))
-.catch(err=>console.error('Could not connect to the MongoDB...', err))
-
-
 var passport = require('passport');
 const bcrypt = require('bcrypt')
 
@@ -45,13 +40,12 @@ router.get('/', async function(req, res, next) {
 });
 
 // router.get('/', async function(req, res, next) {
-  
-//   const a = await ProjectOwner.find();
-//   const b = await AdminUser.find();
-//   const c = a.concat(b)
-//   res.json(c)
+//   const users = await User.find()
+//   res.render('user-list', { users:users })
 
 // });
+
+
 // router.get('/', async function(req, res, next) {
 //   const role = new Role({
 //     name: "Admin"
@@ -94,16 +88,6 @@ router.get('/create-project', authUser,authRole('project-owner'), async (req,res
   // console.log(req.user)
   res.render('multi', {user: req.cookies.userEmail});
   
-})
-
-router.get('/user-login', (req,res)=>{
-  res.render('user-login');
-})
-
-
-router.get('/user-signup', (req,res)=>{
-  console.log(req.cookies.userEmail)
-  res.render('user-register', {user: req.cookies.userEmail});
 })
 
 
@@ -192,107 +176,6 @@ router.post('/processProjectUpload', cpUpload, urlencodedParser, async (req, res
   res.redirect('/')
 })
 
-router.get('/register', (req, res)=>{
-  res.render('register')
-});
-
-
-// router.get('/post-page',(req,res)=>{
-//   res.render('p-o-page.ejs')
-// } )
-
-router.post('/addme', async (req,res, next)=>{
-  const userFirstname = req.body.firstName;
-  const userLastname = req.body.lastName;
-  const userEmail = req.body.email;
-  const userPassword = req.body.password1;
-  const userPassword1 = req.body.password2;
-
-
-  const salt = await bcrypt.genSalt(10);
-
-  if(userPassword === userPassword1){
-
-    const user = new User({
-      firstname: userFirstname,
-      lastname: userLastname,
-      email:  userEmail,
-      password: await bcrypt.hash(userPassword, salt),  
-    }).save()
-    .then( item =>{
-      res.redirect('/login')
-    }).catch(error=>{
-      res.status(400).send('unable to save in database')
-    })
-    
-  } else {
-    return res.send("Passwords are not the same")
-  }
-
-})
-
-router.get('/login', (req,res)=>{
-  res.render('login2', {title: "Login User", user: req.user})
-})
-
-
-
-router.post('/loginUsers',[
-
-  
-  check('email').custom(async(value, { req }) => {
-    return await ProjectOwner.findOne({ email: req.body.email }) ||  AdminUser.findOne({ email: req.body.email }) .then(async user => {
-      if (!user) {
-         return Promise.reject('Invalid Credentials');
-      } 
-    });
-
-  }),
-  check('password', 'This password must be 6+ characters long.').isLength({ min:6 }),
-  check('password').custom(async(value, { req }) => {
-    return await ProjectOwner.findOne({ email: req.body.email }) ||  AdminUser.findOne({ email: req.body.email }) .then(async user => {
-      const poValidPassword = await bcrypt.compare(req.body.password, user.password)
-      console.log(poValidPassword);
-      if (!poValidPassword) {
-         return Promise.reject('Password incorrect');
-      }
-
-    });
-  }),
-], async (req,res, next)=>{
-
-  let projectOwner = await ProjectOwner.findOne({ email: req.body.email })
-  let userAdmin = await AdminUser.findOne({ email: req.body.email })
-
-  const errors = validationResult(req);
-  if (!errors.isEmpty()){
-    const alert = errors.array();
-    return res.render('login2', {alert, user: req.cookies.userEmail})
-  }
-  
-
-  if (userAdmin) {
-    // const validPassword = await bcrypt.compare(req.body.password, userAdmin.password)
-    // if (!validPassword) return res.status(400).send("Invalid email or password.")
-
-    res.cookie('userEmail', req.body.email)
-
-    return res.redirect(`/${userAdmin.role}`)
-  } else if (projectOwner) {
-
-    res.cookie('userEmail', req.body.email)
-
-    return res.redirect('/create-project')
-  } 
-
-})
-
-router.get('/logout', async (req, res) => {
-  res.clearCookie('userEmail')
-  res.redirect('/')
-});
-
-
 // ==================passport route github===============
 router.get('/git', passport.authenticate('github'))
 
@@ -368,64 +251,9 @@ router.get('/google/callback',
     res.send('Successful user login ')
   })
 
-router.post('/processProjectOwnerRegister', [
   
-  
-  // check('email', 'Email is not valid.').isEmail().normalizeEmail(),
-  check('email', 'Email is not valid.').custom(async(value, { req }) => {
 
-    return await ProjectOwner.findOne({ email: req.body.email }).then(user => {
-      if (user) {
-        return Promise.reject('E-mail already in use');
-      }
-    });
-  }),
-  check('password1', 'This password must be 6+ characters long.').exists().isLength({ min:6 }),
-    
-  check('password1').custom((value, { req }) => {
-    if (value !== req.body.password2){
-      
-      throw new Error('Passwords do not match..')
-    } else {
-      return true;
-    }
 
-  })
-], async (req, res) => {
-
-    // let projectOwner = await ProjectOwner.findOne({ email: req.body.email })
-    // if (projectOwner) return res.status(400).send("User already registered.")
-  
-    const salt = await bcrypt.genSalt(10);
-    
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()){
-      const alert = errors.array();
-      return res.render('user-register', {alert, user: req.cookies.userEmail})
-    }
-  
-    if(req.body.password1 === req.body.password2){
-  
-      projectOwner = new ProjectOwner({
-        firstname: req.body.firstName,
-        lastname: req.body.lastName,
-        email: req.body.email,
-        address: req.body.address,
-        country: req.body.country,
-        role: req.body.role,
-        password : await bcrypt.hash(req.body.password1, salt),   
-      }).save()
-      .then( item =>{
-        res.redirect('/login')
-      }).catch(error=>{
-        res.status(400).send('unable to save in database')
-      })
-      
-    } else {
-      return res.send("Passwords are not the same")
-    }
-});
 
 
 

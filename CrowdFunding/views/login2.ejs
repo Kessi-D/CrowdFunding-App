@@ -6,7 +6,7 @@
 <main>
 
   <div class="col-md-4 mx-auto col-lg-3 mt-5">
-    <form class="p-4 p-md-5 border rounded-3 bg-light" action="/loginUsers" method="post">
+    <form class="p-4 p-md-5 border rounded-3 bg-light" action="/users/loginUsers" method="post">
       <% if (typeof alert != 'undefined') { %>
         <% alert.forEach(function(error) { %>
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -31,7 +31,7 @@
       <button class="w-100 btn btn-lg btn-primary" type="submit">Sign In</button> <br><br>
       <a href="/git" class="w-100 btn btn-lg btn-dark" >LogIn With Github</a>
       <hr class="my-4">
-      <small class="text-muted">Don't have an account? <a href="/user-signup">Sign Up</a><br>Remember when you signup,you sign up as a project owner</small>
+      <small class="text-muted">Don't have an account? <a href="/users/user-signup">Sign Up</a><br>Remember when you signup,you sign up as a project owner</small>
     </form>
   </div>
 
@@ -39,7 +39,6 @@
 </main>
 
 
-    <script src="/assets/dist/js/bootstrap.bundle.min.js"></script>
 
       
   </body>

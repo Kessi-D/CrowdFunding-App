@@ -35,8 +35,11 @@ router.get('/', async function(req, res, next) {
   
   const ghanaProjects = await Project.find({country:"GHS", status:"Active"});
   const burkinaProjects = await Project.find({country:"BKF", status:"Active"});
+  let user = req.user;
 
-  res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects, user: req.user});
+  console.log(user)
+
+  res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects, user: user});
 });
 
 // router.get('/', async function(req, res, next) {

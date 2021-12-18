@@ -4,7 +4,7 @@ const multer = require('multer');
 const fs = require('fs')
 
 const Project = require('../models/Project')
-const ProjectOwner = require('../models/projectOwner')
+const User = require('../models/User')
 
 const { FinancialStatusMessage, FullyFundedProjectMessage } = require('../notificatons')
 const { sendEmailToProjectOwner, sendFullyFundedEmailToProjectOwner } = require('../gmail-notification')
@@ -14,16 +14,16 @@ router.get('/', async function(req, res, next) {
  
   const projects = await Project.find({status:"Active"})
 
-  res.render('financial-index', { title: 'Express', projects:projects, userEmail: req.cookies.userEmail });
+  res.render('financial-index', { title: 'Express', projects:projects, user: req.cookies.userEmail });
 });
 
 router.get('/view-project/:id', async (req, res) => {
   const project = await Project.findById(req.params.id)
   console.log(project)
 
-  const projectOwner = await ProjectOwner.findById(project.projectOwner)
+  const projectOwner = await User.findById(project.projectOwner)
 
-  res.render('financial-view-project', { title: 'Express', project:project, projectOwner:projectOwner, userEmail: req.cookies.userEmail });
+  res.render('financial-view-project', { title: 'Express', project:project, projectOwner:projectOwner, user: req.cookies.userEmail });
 });
 
 
@@ -81,7 +81,7 @@ router.post('/processDonations', async (req,res)=>{
   // // console.log(amountApproved)
 
   
-  const projectOwner = await ProjectOwner.findById(project.projectOwner)
+  const projectOwner = await User.findById(project.projectOwner)
 
   if (percentSum > 100){
     FullyFundedProjectMessage();

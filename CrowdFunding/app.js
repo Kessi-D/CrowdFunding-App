@@ -51,18 +51,18 @@ app.use(methodOverride('_method'))
 app.use(setUser)
 
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/admin',  adminRouter)
-app.use('/reviewer',  reviewerRouter)
-app.use('/financial', financialRouter)
-
-
 // app.use('/', indexRouter);
-// app.use('/users', usersRouter)
-// app.use('/admin', authUser, authRole('admin'), adminRouter)
-// app.use('/reviewer', authUser, authRole('reviewer'), reviewerRouter)
-// app.use('/financial',authUser, authRole('financial'), financialRouter)
+// app.use('/users', usersRouter);
+// app.use('/admin',  adminRouter)
+// app.use('/reviewer',  reviewerRouter)
+// app.use('/financial', financialRouter)
+
+
+app.use('/', indexRouter);
+app.use('/users', usersRouter)
+app.use('/admin', authUser, authRole('admin'), adminRouter)
+app.use('/reviewer', authUser, authRole('reviewer'), reviewerRouter)
+app.use('/financial',authUser, authRole('financial'), financialRouter)
 
 
 passport.use(new GitHubStrategy(config,

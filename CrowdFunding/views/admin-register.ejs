@@ -1,10 +1,11 @@
-<%- include("admin-navbar") %>   
+<%- include("navbar") %>   
 <br>
     
-<main>
+<main class="bg-light">
+  <br>
 
   <div class="col-md-4 mx-auto col-lg-3">
-    <form class="p-4 p-md-5 border rounded-3 bg-light" action="/admin/processAdminRegister" method="post">
+    <form class="p-4 p-md-5 border rounded-3 bg-white" action="/admin/processAdminRegister" method="post">
 
       <% if (typeof alert != 'undefined') { %>
         <% alert.forEach(function(error) { %>
@@ -55,5 +56,5 @@
   
 </main>
 
-<%- include("admin-footer") %>   
+<%- include("footer") %>   
 

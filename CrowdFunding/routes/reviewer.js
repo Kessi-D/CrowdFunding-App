@@ -18,7 +18,7 @@ var {sendApprovedMail, sendDeniedMail} = require ('../gmail-notification')
 router.get('/', async function(req, res, next) {
   let projects;
   let signedUser;
-  console.log(req.user)
+  // console.log(req.user)
   if (req.user){
     signedUser = req.user;
     projects = await Project.find({ status: "review", reviewer : signedUser.email })
@@ -26,12 +26,12 @@ router.get('/', async function(req, res, next) {
   
   projects = await Project.find({ status: "review", reviewer : signedUser.email })
 
-  res.render('reviewer-index', { title: 'Reviewer', projects:projects, userEmail: req.cookies.userEmail });
+  res.render('reviewer-index', { title: 'Reviewer', projects:projects, user: req.cookies.userEmail });
 });
 
 router.get('/view-project/:id', async (req, res) => {
   const project = await Project.findById(req.params.id)
-  res.render('reviewer-view-project', { title: 'Express', project:project, userEmail: req.cookies.userEmail });
+  res.render('reviewer-view-project', { title: 'Express', project:project, user: req.cookies.userEmail });
 });
 
 // router.get('/edit-project/:id', async (req, res) => {

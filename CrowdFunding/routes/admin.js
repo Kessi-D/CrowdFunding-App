@@ -54,23 +54,23 @@ router.get('/', async function(req, res, next) {
 router.get('/projects', async function(req, res, next) {
   const projectsFromVistors = await Project.find({ status: "inactive" })
 
-  res.render('admin-index', { title: 'Express', projectsFromVistors:projectsFromVistors, userEmail: req.cookies.userEmail});
+  res.render('admin-index', { title: 'Express', projectsFromVistors:projectsFromVistors, user: req.cookies.userEmail});
 });
 
 router.get('/view-project/:id', async (req, res) => {
   const project = await Project.findById(req.params.id)
-  const reviewers = await AdminUser.find({role: "reviewer"})
+  const reviewers = await User.find({role: "reviewer"})
 
-  const projectOwner = await ProjectOwner.findById(project.projectOwner)
+  const projectOwner = await User.findById(project.projectOwner)
 
-  if (project.status === "reviewed") return res.render('admin-view-project-reviewed', { title: 'Express', project:project, userEmail: req.cookies.userEmail });
-  if (project.status === "denied") return res.render ('denied-project-reviewed', {title: 'Express', project:project, userEmail: req.cookies.userEmail, projectOwner:projectOwner })
-  res.render('admin-view-project', { title: 'Express', project:project, reviewers:reviewers, userEmail: req.cookies.userEmail });
+  if (project.status === "reviewed") return res.render('admin-view-project-reviewed', { title: 'Express', project:project, user: req.cookies.userEmail });
+  if (project.status === "denied") return res.render ('denied-project-reviewed', {title: 'Express', project:project, user: req.cookies.userEmail, projectOwner:projectOwner })
+  res.render('admin-view-project', { title: 'Express', project:project, reviewers:reviewers, user: req.cookies.userEmail });
 });
 
 router.get('/register', async (req, res) => {
   console.log(req.cookies.userEmail)
-  res.render('admin-register', {title: 'Admin Register', userEmail: req.cookies.userEmail})
+  res.render('admin-register', {title: 'Admin Register', user: req.cookies.userEmail})
 });
 
 
@@ -146,7 +146,7 @@ router.get('/users', async (req, res) => {
   // console.log(usersList)
   // console.log(user)
   // console.log(usersEmails)
-  res.render('user-list', {usersList:usersList, user: user})
+  res.render('admin-user-list', {usersList:usersList, user: user})
 });
 
 router.get('/delete-project/:id', async (req, res) => {
@@ -160,7 +160,7 @@ router.get('/delete-project/:id', async (req, res) => {
 
 router.post('/uploadOnline', async (req, res) => {
   const project = await Project.findById(req.body.projectID);
-  const projectOwner = await ProjectOwner.findById(project.projectOwner);
+  const projectOwner = await User.findById(project.projectOwner);
 
   ProjectApprovedMessage();
 
@@ -227,7 +227,7 @@ router.post('/processAdminRegister', [
 
     if (!errors.isEmpty()){
       const alert = errors.array();
-      return res.render('admin-register', {alert, title: "Admin Register", userEmail: req.cookies.userEmail})
+      return res.render('admin-register', {alert, title: "Admin Register", user: req.cookies.userEmail})
     }
 
     user = new User({
@@ -278,7 +278,7 @@ router.post('/processSendToReviewer', urlencodedParser, async (req,res)=>{
 router.get('/reviewed', async (req, res, next)=>{
   const projectsFromReviewers = await Project.find({ status: "reviewed"})
   const deniedProject = await Project.find({ status: "denied"})
-  res.render('admin-reviewed-page', {title: 'Reviewed', projectsFromReviewers:projectsFromReviewers, deniedProject:deniedProject, userEmail: req.cookies.userEmail})
+  res.render('admin-reviewed-page', {title: 'Reviewed', projectsFromReviewers:projectsFromReviewers, deniedProject:deniedProject, user: req.cookies.userEmail})
 })
 
 router.get('/role', async (req, res, next)=>{

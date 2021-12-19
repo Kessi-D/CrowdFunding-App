@@ -39,7 +39,7 @@ router.get('/', async function(req, res, next) {
 
   console.log(user)
 
-  res.render('home', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects, user: user});
+  res.render('home2', {ghanaProjects:ghanaProjects, burkinaProjects:burkinaProjects, user: user});
 });
 
 // router.get('/', async function(req, res, next) {
@@ -153,6 +153,8 @@ router.post('/processProjectUpload', cpUpload, urlencodedParser, async (req, res
 
   let signedPO = req.user;
   let poID = signedPO._id;
+
+  
 
 
   const project = new Project({

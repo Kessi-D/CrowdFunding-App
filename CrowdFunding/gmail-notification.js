@@ -1,5 +1,5 @@
 var nodemailer = require('nodemailer')
-const AdminUser = require('../CrowdFunding/models/adminUser')
+const User = require('../CrowdFunding/models/User')
 
 
 async function sendEMailToReviewer (email) {
@@ -57,6 +57,8 @@ async function sendEmailtoAdmin(participants, title, location){
   // console.log(process.env.EMAIL)
   let transporter = nodemailer.createTransport({
     service: "gmail",
+    port: 465,
+    secure: true,
     auth: {
       user: process.env.EMAIL,
       pass: process.env.PASSWORD
@@ -66,7 +68,7 @@ async function sendEmailtoAdmin(participants, title, location){
     }
   });
 
-  const adminUsers = await AdminUser.find({role:"admin"})
+  const adminUsers = await User.find({role:"admin"})
 
   for (let i=0; i < adminUsers.length; i++){
     const userEmail = adminUsers[i].email
@@ -109,7 +111,7 @@ let transporter = nodemailer.createTransport({
   }
 });
 
-const adminUsers = await AdminUser.find({role:"admin"})
+const adminUsers = await User.find({role:"admin"})
 
 for (let i=0; i < adminUsers.length; i++){
   const adminEmail = adminUsers[i].email
@@ -153,7 +155,7 @@ let transporter = nodemailer.createTransport({
   }
 });
 
-const adminUsers = await AdminUser.find({role:"admin"})
+const adminUsers = await User.find({role:"admin"})
 
 for (let i=0; i < adminUsers.length; i++){
   const adminEmail = adminUsers[i].email

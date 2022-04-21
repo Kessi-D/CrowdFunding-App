@@ -1,0 +1,99 @@
+<%- include("admin-navbar") %>   
+<br>
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-sm-4">
+            <form  method="post" action="/admin/processAdminProjectEdit" enctype="multipart/form-data" >
+
+                    <h1>Edit Project</h1>
+
+                    <div class="mb-3" >
+                        <label for="exampleFormControlInput1" class="form-label">Project ID</label>
+                        <select class="form-select" name="projectToEditID" aria-label="Default select example">
+                            <option value="<%= project._id %>"selected><%= project._id %></option>
+                        </select>
+                    </div>
+               
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Project Title</label>
+                        <input type="text" class="form-control" name="projectTitle" placeholder="Project Title.." value="<%= project.title %>" >
+                    </div>
+                      
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">Description</label>
+                        <textarea class="form-control"  name="projectDescription" rows="3"><%= project.description %></textarea>
+                    </div>
+            
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">Aimed end result</label>
+                        <textarea class="form-control"  name="projectAimedEndResult" rows="3"><%= project.endResult %></textarea>
+                    </div>
+        
+        
+             
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">GPS location of the project, region and country in Africa</label>
+                        <input type="text" class="form-control" name="projectLocation" placeholder="Location" value="<%= project.location %>">
+                    </div>
+        
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">Organization (NGO, group of friends etc.) executing the project</label>
+                        <input type="text" class="form-control" name="projectParticipants" placeholder="Location" value="<%= project.participant %>">
+                    </div>
+        
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">Description of the impact on the digital transformation of Africa</label>
+                        <textarea class="form-control"  name="projectImpactInAfrica" rows="3"><%= project.impact %></textarea>
+                    </div>
+        
+          
+
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Links to social media</label>
+                    <input type="text" class="form-control" name="socialLinks" placeholder="Social Media.." value="<%= project.socailMedia %>">
+                </div>
+        
+               
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Start Date</label>
+                        <input type="date" class="form-control"  name="startDate" value="<%= project.startDate %>" placeholder="name@example.com">
+                    </div>
+        
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">End Date</label>
+                        <input type="date" class="form-control"  name="endDate" value="<%= project.endDate %>" placeholder="name@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Currency</label>
+                        <select class="form-select" aria-label="Default select example" name="Currency" >
+                            <option selected>Open this select menu</option>
+                            <option value="GHS" <%= project.currency == "GHS" ? "selected":"" %> >GHS</option>
+                            <option value="USD" <%= project.currency == "USD" ? "selected":"" %>>USD</option>
+                            <option value="GBP" <%= project.currency == "GBP" ? "selected":"" %>>GBP</option>
+        
+                        </select>
+                    </div>
+                    
+        
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label">Amount Needed</label>
+                        <input type="number" class="form-control"  name="projectAmountNeeded" placeholder="0.00" value="<%= project.amountAsked %>">
+                    </div>
+                
+                    <div class="mb-3">
+                        <label for="formFileMultiple" class="form-label">Initial Stage Images</label>
+                        <input class="form-control" type="file" name="initialStageImgs" id="formFileMultiple" multiple>
+                    </div>
+        
+                    <div class="mb-3">
+                        <label for="formFileMultiple" class="form-label">Final Stage Images</label>
+                        <input class="form-control" type="file" name="finalStageImgs" id="formFileMultiple" multiple>
+                    </div>
+    
+                <button type="submit" class="btn btn-success">Update Project</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- include("admin-footer") %>   

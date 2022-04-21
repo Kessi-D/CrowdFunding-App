@@ -1,0 +1,183 @@
+<%- include("navbar") %>
+
+
+<style>
+	.nav-link:hover{
+		background-color: rgb(199, 199, 197);
+		color: black;
+	}
+</style>
+
+
+<div class="row" style="background-color: whitesmoke">
+	<div class="col-2">
+		<div class="d-flex flex-column flex-shrink-0 p-3 text-white" style="background-color: #79A00A; width: 100%; height: 100vh;">
+			<a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+			  <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+			  <span class="fs-4">Admin</span>
+			</a>
+			<hr>
+			<ul class="nav nav-pills flex-column mb-auto">
+			  <li class="nav-item">
+				<a href="/admin/register" class="nav-link text-white" aria-current="page">
+				  Create Admins
+				</a>
+			  </li>
+			  <li>
+				<a href="/admin/projects" class="nav-link text-white">
+				  Pending projects
+				</a>
+			  </li>
+			  <li>
+				<a href="/admin/reviewed" class="nav-link text-white">
+				  Reviewed Project
+				</a>
+			  </li>
+			  <li>
+				<a href="/admin/users" class="nav-link text-white">
+				  Users List
+				</a>
+			  </li>
+			</ul>
+			<hr>
+			<div class="dropdown">
+			  <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+				<img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+				<strong>mdo</strong>
+			  </a>
+			  <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+				<li><a class="dropdown-item" href="#">New project...</a></li>
+				<li><a class="dropdown-item" href="#">Settings</a></li>
+				<li><a class="dropdown-item" href="#">Profile</a></li>
+				<li><hr class="dropdown-divider"></li>
+				<li><a class="dropdown-item" href="#">Sign out</a></li>
+			  </ul>
+			</div>
+		  </div>
+	</div>
+	<div class="col-10">
+		<div class="row mt-3">
+			<div class="col-lg-12">
+				<div class="container">
+					<div class="row g-4">
+					<div class="col-md-6 col-lg-3">
+						<div class="card bg-ligt">
+							<div class="card-body text-center"> 
+								<h3 class="card-title mb-3"><a href="/admin/users" class="text-decoration-none text-dark">Users</a> </h3>
+								<h4 class="card-text"><%= countTotalUsers %></h4>
+							</div>
+						</div>
+					</div>
+				
+					<div class="col-md-6 col-lg-3">
+						<div class="card bg-ligt">
+							<div class="card-body text-center"> 
+								<h3 class="card-title mb-3"><a href="#" class="text-decoration-none text-dark">Projects Created</a></h3>
+								<h4 class="card-text"><%= countProjects %></h4>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-3">
+						<div class="card bg-ligt">
+							<div class="card-body text-center"> 
+								<h3 class="card-title mb-3"><a href="/admin/reviewed" class="text-decoration-none text-dark"> Reviewed Projects</a></h3>
+								<h4 class="card-text"><%= countReviewedProjects %></h4>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-3">
+						<div class="card bg-ligt">
+							<div class="card-body text-center"> 
+								<h3 class="card-title mb-3">Funded Projects</h3>
+								<h4 class="card-text">0</h4>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+
+				<br>
+				<div class="row">
+					<div class="col-4">
+						<div class="container mt-3">
+							<div class="row g-4">
+								<div >
+									<div class="card">
+										<div class="card-body text-center"> 
+											
+											<h4 class="card-title mb-4"><a href="/admin/projects" class="text-decoration-none text-dark">Recent Projects</a> </h4>
+	
+											<% for (let i = 0; i < projects.length; i++) { %>
+											
+												<div class="row mb-3">
+													<div class="col-sm-4"><a href="/admin/projects"><img src="/images/final_stage_pics/<%= projects[i].finalImages[0] %>" alt="" class="img-fluid "></a></div>
+													<div class="col-sm-8"><p class="text-truncate"><%= projects[i].description %></p></div>
+												</div>
+											
+											<% } %>
+	
+			
+										</div>
+										
+									</div>
+									
+								</div>
+								
+								
+							</div>
+	
+						</div>
+					</div>
+					<div class="col-4">
+						<div class="container mt-3">
+							<div class="row g-4">
+								<div >
+									<div class="card">
+										<div class="card-body text-center"> 
+											
+											<h4 class="card-title mb-4"><a href="/admin/reviewed" class="text-decoration-none text-dark">Reviewed Projects</a> </h4>
+	
+											<% for (let i = 0; i < reviewedProjects.length; i++) { %>
+										
+												<div class="row mb-3">
+													<div class="col-sm-4"><a href="/admin/reviewed"><img src="/images/final_stage_pics/<%= reviewedProjects[i].finalImages[0] %>" alt="" class="img-fluid"></a></div>
+													<div class="col-sm-8"><p class="text-truncate"><%= reviewedProjects[i].description %></p></div>
+												</div>
+											
+											<% } %>
+	
+			
+										</div>
+										
+									</div>
+									
+								</div>
+								
+								
+							</div>
+	
+						</div>
+					</div>
+					<div class="col-4">
+						<div class="my-3 p-3 bg-body rounded shadow-sm">
+							<h4 class="border-bottom pb-2 mb-0">Users</h4>
+							<% for (var i=0; i < usersList.length; i++) { %>
+								<div class="d-flex text-muted pt-3">
+									<svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
+							
+								<p class="pb-3 mb-0 small lh-sm border-bottom">
+									<strong class="d-block text-gray-dark">@<%= usersList[i].email %></strong>
+									<%= usersList[i].firstname %> <%= usersList[i].lastname %> <br>
+									<%= usersList[i].role %>
+								</p>
+								</div>
+							<% } %>
+						
+							<small class="d-block text-end mt-3">
+							  <a href="/admin/users">All users</a>
+							</small>
+						</div>
+					</div>
+				</div>
+
+			

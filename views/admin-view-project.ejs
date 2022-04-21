@@ -1,0 +1,110 @@
+<%- include("navbar") %>  
+    <main>
+    
+    
+      <div class="container"> <br>
+        <div class="row g-5">
+          <div class="col-md-8">
+            <h3 class="pb-4 mb-4 fst-italic border-bottom">
+              <%= project.title %>
+            </h3>
+      
+            <article class="blog-post">
+              <%= project.description %>
+            </article>
+              
+      
+            <% for(var j=0; j < project.initalImages.length; j++) { %>
+              <div class="col-sm-6 col-lg-4 mb-4">
+                  <div class="card">
+                      <img src="/images/initial_stage_pics/<%= project.initalImages[j] %>" alt="">
+                  </div>
+                </div>
+              
+            <% } %>
+      
+            <article class="blog-post">
+              <%= project.endResult %>
+            </article>
+      
+            
+      
+            <% for(var j=0; j < project.finalImages.length; j++) { %>
+              <div class="col-sm-6 col-lg-4 mb-4">
+                  <div class="card">
+                      <img src="/images/final_stage_pics/<%= project.finalImages[j] %>" alt="">
+                  </div>
+                </div>
+              
+            <% } %>
+      
+            <article class="blog-post">
+              <%= project.impact %>
+            </article>
+      
+      
+      
+          </div>
+      
+          <div class="col-md-4">
+            <div class="position-sticky" style="top: 2rem;">
+      
+        
+              <div class="p-4 mb-3 bg-light rounded">
+                <h4 class="fst-italic">Administrator buttons</h4>
+                <p class="mb-0">Review Status: <%= project.status %></p>
+                <a href="/admin/edit-project/<%= project._id %>" class="btn btn-outline-primary ">Edit</a>
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  Delete
+                </button>
+      
+                <br> <br>
+      
+                <form action="/admin/processSendToReviewer" method="post">
+      
+                  <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Project ID</label>
+                    <input type="text" class="form-control" name="projectID" value="<%= project._id %>">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Reviewer</label>
+                    <select class="form-select" aria-label="Default select example" name="reviewer">
+                      <% for (let i = 0; i < reviewers.length; i++) { %>
+                        <option value="<%= reviewers[i].email %>"><%= reviewers[i].email %></option>
+                      <% } %>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-secondary">Send to Reviewer</button>
+                </form>
+                
+              
+          </div>
+      </div>
+    
+      
+    
+    
+    </main>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Delete Project</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete the Project?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Cancel</button>
+            <a href="/admin/delete-project/<%= project._id %>" class="btn btn-danger">Yes, Delete</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <%- include("footer") %>  
+
+

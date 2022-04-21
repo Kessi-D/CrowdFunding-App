@@ -1,0 +1,52 @@
+<%- include("navbar") %>
+
+<main>
+    
+      <div class="album py-5 p-3 bg-light">
+        <h2>Users</h2>
+          <div class="table-responsive">
+            <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th scope="col"># User Id</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+    
+                <% for (var i=0; i < usersList.length; i++) {%>
+                  <tr>
+                    <td><%= usersList[i]._id %></td>
+                    <td><%= usersList[i].firstname %></td>
+                    <td><%= usersList[i].lastname %></td>
+                    <td><%= usersList[i].email %></td>
+                    <td><%= usersList[i].role %></td>
+   
+                    <td>
+                      <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Delete
+                      </button>
+                    </td>
+    
+                  </tr>
+                <% } %>
+    
+                
+              </tbody>
+            </table>
+          </div>
+        </div>
+    
+    
+    </main>
+
+
+<%- include("footer") %>  
+    
+    
+
+

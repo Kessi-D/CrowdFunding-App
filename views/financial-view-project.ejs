@@ -1,0 +1,97 @@
+<%- include("navbar") %>
+
+<main>
+	<br>
+	<div class="container">
+		<div class="row g-5">
+			<div class="col-md-8">
+			  <h3 class="pb-4 mb-4 fst-italic border-bottom">
+				<%= project.title %>
+			  </h3>
+		
+			  <article class="blog-post">
+				<%= project.description %>
+			  </article>
+				
+		
+			  <% for(var j=0; j < project.initalImages.length; j++) { %>
+				<div class="col-sm-6 col-lg-6 mb-4">
+					<div class="card">
+						<img src="/images/initial_stage_pics/<%= project.initalImages[j] %>" alt="">
+					</div>
+				  </div>
+				
+			  <% } %>
+		
+			  <article class="blog-post">
+				<%= project.endResult %>
+			  </article>
+		
+			  
+		
+			  <% for(var j=0; j < project.finalImages.length; j++) { %>
+				<div class="col-sm-6 col-lg-6 mb-4">
+					<div class="card">
+						<img src="/images/final_stage_pics/<%= project.finalImages[j] %>" alt="">
+					</div>
+				  </div>
+				
+			  <% } %>
+		
+			  <article class="blog-post">
+				<%= project.impact %>
+			  </article>
+		
+		
+		
+			</div>
+		
+			<div class="col-md-4">
+			  <div class="position-sticky" style="top: 2rem;">
+		
+		  
+				<div class="p-4 mb-3 bg-light rounded">
+		
+				  <h4 class="fst-italic">Financial Administrator buttons</h4>
+
+				  <% if (project.percentage >= 100) { %>
+					<div class="progress">
+					  <div class="progress-bar  bg-danger" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+					</div>
+				  <% } else { %>
+				  
+					<div class="progress">
+					  <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+					</div> 
+	
+				  <% } %>
+		
+				  <p class="mb-0">The amount recieved:  <%= project.moneyPledged %> GHS </p>
+				  <p class="mb-0">The Money asked: <%= project.amountAsked %> GHS   </p>
+				  <p class="mb-0">The Percentage: <%= project.percentage %>% </p>
+				  <br>
+		
+				  <form method="post" action="/financial/processDonations"  style="background-color:cornsilk; padding: 10px; width: 100%;">
+					<h4>Donations Recieved</h4>
+					<input type="text" value="<%= project._id %>" name="projectID" hidden>
+					<input type="text" value="<%= projectOwner.email %>" name="projectOwner" hidden>
+					<input type="text" value="<%= project.percentage %>" name="projectPercent" hidden>
+					
+					<label for="">Enter Total Amount recieved for the project</label> 
+					<input type="number" name="donationsRecieved"> <br> <br>
+					<button type="submit" class="btn btn-success">Update Financial Status</button>
+				  </form> <br>
+				
+				</div>
+			  </div>
+			</div>
+		  </div>
+	</div>
+	<br>
+	
+</main>
+	
+
+<%- include("footer") %>
+
+

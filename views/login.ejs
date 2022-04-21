@@ -1,0 +1,48 @@
+<%- include("navbar") %> 
+
+<link rel="stylesheet" href="/stylesheets/style1.css">
+
+
+<section class="vh-100" style="background-color: #c6cfdf;">
+    <div class="container">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card shadow-2-strong" style="border-radius: 1rem;">
+            <div class="card-body p-5 text-center">
+
+                <form id="form" action="/loginUsers" method="post">
+                    <h1 id="form-title"> Sign In</h1>
+                
+                    <label for="email adress" class="name-info">Email Address</label>
+                     <input type="email" name="email" id="" placeholder="Enter email" required>
+                
+                    <label for="password" class="name-info">Password</label>
+                     <input type="password" name="password" placeholder="Enter password" required>
+                    
+                    <!-- <p class="name-info" id="checkbox"> -->
+                    <!-- <input type="checkbox" name="" > Remember me</p> -->
+                <div class="check-container">
+                    <input type="checkbox" name="" id="checkbox">
+                     <span>Remember me </span>
+                     
+                </div>
+                    <!-- <div class="submit"> -->
+                        <button class="submit">Submit</button>
+                        <p class="enter-password"> <span>Forgot</span>  <span id="password">password?</span> </p>
+                
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>    
+  
+
+    
+    
+<%- include("footer") %> 
+
+

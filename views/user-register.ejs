@@ -1,0 +1,75 @@
+<%-  include("navbar") %>
+
+  <div class="col-md-4 mx-auto col-lg-3">
+    <form class="p-4 p-md-5 border rounded-3 bg-light" action="/users/processProjectOwnerRegister" method="post">
+
+      <% if (typeof alert != 'undefined') { %>
+        <% alert.forEach(function(error) { %>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <%= error.msg %>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+        <% }) %>
+    <% } %>
+    
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="floatingInput" name="firstName" required>
+        <label for="floatingInput">First Name</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="floatingInput" name="lastName" required>
+        <label for="floatingInput">Last Name</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="email" class="form-control" id="floatingInput" name="email" required>
+        <label for="floatingInput">Email address</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="floatingInput" name="address" required>
+        <label for="floatingInput">Address</label>
+      </div>
+
+
+      <div class="form-floating mb-3">
+        
+        <select class="form-select" aria-label="Default select example" name="country" required>
+            <option value="GHS">Ghana</option>
+            <option value="GHS">Burkina Faso</option>
+        </select>
+        <label for="exampleFormControlInput1" class="form-label">Country</label>
+      </div>
+      <div class="form-floating mb-3" hidden>
+        
+        <select class="form-select" aria-label="Default select example" name="role" required>
+            <option value="project-owner">Project Owner</option>
+        </select>
+        <label for="exampleFormControlInput1" class="form-label">Role</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="floatingPassword" name="password1" required>
+        <label for="floatingPassword">Password</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="password" class="form-control" id="floatingPassword" name="password2" required>
+        <label for="floatingPassword">Confirm Password</label>
+      </div>
+
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
+      <hr class="my-4">
+      <small class="text-muted">Have an account? <a href="/users/login">Log In</a></small>
+    </form>
+  </div>
+
+  
+</main>
+
+
+    <script src="/assets/dist/js/bootstrap.bundle.min.js"></script>
+
+      
+  </body>
+</html>
+
+

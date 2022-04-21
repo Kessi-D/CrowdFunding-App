@@ -1,0 +1,118 @@
+
+    <title>Document</title>
+    <link rel="stylesheet" href="/stylesheets/multiForm.css">
+    <script src="https://kit.fontawesome.com/b9b22874d4.js" crossorigin="anonymous"></script>
+   
+
+    
+    <div class="container bg-light">
+        <header>Signup Form</header>
+
+        <div class="form-outer">
+            <form method="post" action="/processProjectUpload" enctype="multipart/form-data">
+
+                <div class="page slidepage">
+                    <div class="title">Project Info:</div>
+                    <div class="field">
+                        <div >Project Title</div> <br>
+                        <input type="text" placeholder="Project title..." name="projectTitle">
+
+                      
+                    </div>
+                    <div class="field">
+                        <div >Description</div> <br>
+                        <textarea name="projectDescription" id="" cols="30" rows="10"></textarea>
+                    </div>
+                    <div class="field">
+                        <div >Aimed end result</div> <br>
+                        <textarea name="projectAimedEndResult" id="" cols="30" rows="10"></textarea>
+                    </div> 
+                    <div class="field">
+                        <div class="nextBtn">Next</div>
+                        <!-- <div class="nextBtn">Next</div> -->
+                    </div>
+                </div>
+
+                <div class="page">
+                    <div class="title">Project Info:</div>
+                    <div class="field">
+                        <div >GPS location of the project, region and country in Africa</div><br>
+                        <input type="text" placeholder="location..." name="projectLocation">
+                    </div> <br>
+                    <div class="field">
+                        <div>Organization (NGO, group of friends etc.) executing the project </div> <br>
+                        <input type="text" placeholder="friends..." name="projectParticipants">
+                    </div>
+                    <div class="field">
+                        <div>Description of the impact on the digital transformation of Africa</div> <br>
+                        <textarea name="projectImpactInAfrica" id="" cols="30" rows="10"></textarea>
+                    </div>
+                    
+                    <div class="field btns">
+                        <div class="prev-1 prev">Previous</div>
+                        <div class="next-1 next">Next</div>
+                    </div>
+                </div>
+
+                <div class="page">
+                    <div class="title">Project Info:</div>
+                    <div class="field">
+                        <div>Start Date</div> <br>
+                        <input type="date" name="startDate" id=""> 
+                    </div>
+                    <div class="field">
+                        <div>End Date</div> <br>
+                        <input type="date" name="endDate" id=""> 
+                    </div>
+                    <div class="field">
+                        <div>Links to social media</div> <br>
+                        <input type="text" placeholder="Social media links..." name="socialLinks">
+                    </div>
+                    
+                    <div class="field btns">
+                        <div class="prev-2 prev">Previous</div>
+                        <div class="next-2 next">Next</div>
+                    </div>
+                </div>
+
+                <div class="page">
+                    <div class="title">Project Info:</div>
+
+                    <div class="field">
+                        <div>Currency</div> <br>
+                        <select name="Currency" id="">
+                            <option value="GHS">GHS</option>
+                            <option value="USD">USD</option>
+                            <option value="GBP">GBP</option>
+                            <option value="BKR">BKR</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <div>Amount needed.</div> <br>
+                        <input type="number" name="projectAmountNeeded" id="">
+                    </div>
+
+                    <div class="field">
+                        <div>Images at initial stage of the project</div> <br>
+                        <input type="file" name="initialStageImgs" id="" multiple >
+                    </div>
+
+                    <div class="field">
+                        <div>Images at final stage of the project (optional)</div> <br>
+                        <input type="file" name="finalStageImgs" id="" multiple >
+                    </div>
+                    
+                    
+                    <div class="field btns">
+                        <div class="prev-3 prev">Previous</div>
+                        <button>Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="/javascripts/multiForm.js"></script>
+<%- include("footer") %>
+
